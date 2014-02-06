@@ -1,0 +1,20 @@
+@font-face
+{
+	font-family: Caecilia;
+	src: url(CaeciliaLTStd-Roman.otf);
+	font-weight: normal;
+}
+
+@font-face
+{
+	font-family: Caecilia;
+	src: url(CaeciliaLTStd-Heavy.otf);
+	font-weight: 500;
+}
+
+@font-face
+{
+	font-family: Caecilia;
+	src: url(CaeciliaLTStd-Bold.otf);
+	font-weight: bold;
+}
