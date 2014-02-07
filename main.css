@@ -1,13 +1,17 @@
 /**
  * GENERAL STYLES
  **/
+html {
+    height: 100%;
+    width: 100%;    
+}
 body {
     background: url(imgs/collective/blue-bg.jpg) top left no-repeat;
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    height: 1080px;
+    height: 100%;
     margin: 0px;
     padding: 0px;
-    width: 1920px;
+    width: 100%;
 }
 .item {
     max-height: 1080px;
@@ -20,7 +24,7 @@ body {
 #feed-container,
 #wall-container {
     display: table;
-    height: 1080px;
+    height: 100%;
     overflow: hidden;
     padding: 40px;
     text-align: center;
@@ -246,7 +250,7 @@ body {
 .slate {
     color: #fff;
     display: table;
-    height: 1080px;
+    height: 100%;
     width: 100%;
     text-align: center;
 }
