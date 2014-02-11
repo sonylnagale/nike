@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    <style>
+        .axis path,
+        .axis line {
+          fill: none;
+          stroke: #000;
+          shape-rendering: crispEdges;
+        }
+
+        .x.axis path {
+          display: none;
+        }
+
+        .line {
+          fill: none;
+          stroke: #666;
+          stroke-width: 6px;
+        }
+    </style>
+</head>
+<body>
+    <div id="chart"></div>
+    <script>
+        var dataSet = [];
+        var url = "http://bootstrap.strategy-prod.fyre.co/api/v3.0/stats.collections.curate/MzQwNjI4OmN1c3RvbS0xMzkxNjM2NjE2MDAzOzI=.json?from=-30min";
+        var margin = {top: 20, right: 50, bottom: 20, left: 50};
+        var width = window.innerWidth - margin.left - margin.right;
+        var height = window.innerHeight - margin.top - margin.bottom;
+
+        var x = d3.time.scale()
+                .range([0, width]);
+        var y = d3.scale.linear()
+                .range([height, 0]);
+
+        var xAxis = d3.svg.axis()
+                    .scale(x)
+                    .orient("bottom");
+        var yAxis = d3.svg.axis()
+                    .scale(y)
+                    .orient("right");
+
+        var line = d3.svg.line()
+                    .x(function(d) { return x(epochToDate(d[1])); })
+                    .y(function(d) { return y(d[0]); })
+                    .interpolate("basis-open");
+
+        var svg = d3.select("#chart")
+                    .append("svg")
+                        .attr("width", width + margin.left + margin.right)
+                        .attr("height", height + margin.top + margin.bottom)
+                    .append("g")
+                        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        function epochToDate (epoch) {
+            return new Date(epoch * 1000);
+        }
+
+        function trimData (rawData) {
+            var trimmedData = [];
+            rawData.forEach(function (v, i, arr) {
+                if (parseInt(v, 10) != 0) {
+                    trimmedData.push(arr[i]); 
+                }
+            });
+
+            return trimmedData;
+        }
+
+        function animateGraph(start, step) {
+            var theLine = svg.select(".line");
+            var duration = 1000;
+            var pos = parseInt(start, 10) + parseInt(step, 10);
+
+            // Redraw the axes
+            svg.select(".x.axis").transition()
+                .duration(duration)
+                .ease("linear")
+                .call(xAxis);
+
+            svg.select(".y.axis").transition()
+                .duration(duration)
+                .ease("linear")
+                .call(yAxis);
+
+            // Move the line
+            theLine.transition()
+                .duration(duration)
+                .ease("linear")
+                .attr("transform", "translate(" + pos + ", 0)")
+                .each("end", animateGraph.bind(this, pos, step));
+        }
+
+        var drawHistory = function (err, rawData) {
+            var data = rawData.data["340628"]["custom-1391636616003"]["2"];
+            dataSet = trimData(data);
+            
+            x.domain(d3.extent(dataSet, function(d) { return epochToDate(d[1]); }));
+            y.domain(d3.extent(dataSet, function(d) { return d[0]; }));
+
+            svg.append("g")
+                .attr("class", "x axis")
+                .attr("transform", "translate(0, " + height + ")")
+                .call(xAxis);
+
+            svg.append("g")
+                    .attr("class", "y axis")
+                    .attr("transform", "translate(" + width + ", 0)")
+                    .call(yAxis)
+
+            svg.append("path")
+                .datum(dataSet)
+                .attr("class", "line")
+                .attr("d", line);
+                // .attr("transform", "translate(-" + width + margin.left + margin.right + ", 0");
+
+            animateGraph(0, -1);
+        };
+        d3.json(url, drawHistory);
+
+        var updateUrl = "http://bootstrap.strategy-prod.fyre.co/api/v3.0/stats.collections.curate/MzQwNjI4OmN1c3RvbS0xMzkxNjM2NjE2MDAzOzI=.json?from=-60s";
+        var drawUpdate = function (err, rawData) {
+            var newData = rawData.data["340628"]["custom-1391636616003"]["2"];
+            var trimmedData = trimData(newData);
+
+            if (trimmedData.length > 0 ) {
+                var theLine = svg.select(".line");
+                var curData = theLine.datum();
+                if (curData[curData.length - 1][1] != trimmedData[0][1]) {
+                    // Add new data
+                    dataSet.push(trimmedData[0]);
+
+                    // Update axes
+                    x.domain(d3.extent(dataSet, function(d) { return epochToDate(d[1]); }));
+                    y.domain(d3.extent(dataSet, function(d) { return d[0]; }));
+
+                    // Redraw the line
+                    theLine.attr("d", line);
+
+                    // remove the last item from the set
+                    dataSet.shift();
+                }
+            }
+        };
+        
+        setInterval(function() {
+            d3.json(updateUrl, drawUpdate)
+        }, 60000);
+
+    </script>
+</body>
+</html>

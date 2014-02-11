@@ -27,12 +27,12 @@ function (Collection, ListView, WallView) {
             mediaWall: {
                 network: "strategy-prod.fyre.co",
                 siteId: '340628',
-                articleId: 'custom-1389909647018'
+                articleId: 'custom-1392076496202'
             },
             listFeed: {
                 network: "strategy-prod.fyre.co",
                 siteId: '340628',
-                articleId: 'custom-1389997816994'
+                articleId: 'custom-1392076496202'
             },
             get: function (key) {
                  return this[key];
