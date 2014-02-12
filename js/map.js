@@ -1,4 +1,3 @@
-var CollectionMapView = Livefyre.require('streamhub-map/views/collection-map-view');
 var MockHotCollectionsStream = Livefyre.require('streamhub-hot-collections-tests/mocks/streams/mock-hot-collections');
 
 var sfLatLon = { lat: 37.7749295, lon: -122.4194155 };
@@ -19,7 +18,7 @@ var collectionToLocation = {
     48103282: indonesiaLatLon
 };
 
-var mapView = window.view = new CollectionMapView({
+var mapView = window.view = new NikeCollectionMapView({
     el: document.getElementById('feed1')
     ,collectionToLocation: collectionToLocation
 });
