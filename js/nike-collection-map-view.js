@@ -22,10 +22,10 @@ NikeCollectionMapView.prototype.notify = function (collection) {
     var ring3 = d3.select($(marker._icon).find('.hub-map-heat-marker-3')[0]);
     var ring4 = d3.select($(marker._icon).find('.hub-map-heat-marker-4')[0]);
 
-    ring1.attr('stroke-opacity', '0.6').transition().duration(1000).attr('stroke-opacity', '0');
-    ring2.transition().delay(50).attr('stroke-opacity', '0.35').transition().duration(1000).attr('stroke-opacity', '0');
-    ring3.transition().delay(200).attr('stroke-opacity', '0.15').transition().duration(1000).attr('stroke-opacity', '0');
-    ring4.transition().delay(300).attr('stroke-opacity', '0.05').transition().duration(1000).attr('stroke-opacity', '0');
+    ring1.attr('stroke-opacity', '0.5').transition().duration(1000).attr('stroke-opacity', '0');
+    ring2.transition().delay(10).attr('stroke-opacity', '0.375').transition().duration(1000).attr('stroke-opacity', '0');
+    ring3.transition().delay(100).attr('stroke-opacity', '0.25').transition().duration(1000).attr('stroke-opacity', '0');
+    ring4.transition().delay(200).attr('stroke-opacity', '0.05').transition().duration(1000).attr('stroke-opacity', '0');
 };
 
 NikeCollectionMapView.prototype._drawMap = function () {
@@ -73,11 +73,11 @@ NikeCollectionMapView.prototype._drawMarker = function (dataPoint) {
             thumbnailUrl = contentItem.author.avatar;
         }
 
-        var svgRings = '<svg class="hub-map-heat-marker" width="305" height="305">';
-        svgRings += '<circle class="hub-map-heat-marker-1" cx="152.5" cy="152.5" r="42.5" stroke="#fd5300" stroke-width="15" stroke-opacity="0" fill="none"></circle>';
-        svgRings += '<circle class="hub-map-heat-marker-2" cx="152.5" cy="152.5" r="80" stroke="#fd5300" stroke-width="15" stroke-opacity="0" fill="none"></circle>'
-        svgRings += '<circle class="hub-map-heat-marker-3" cx="152.5" cy="152.5" r="117.5" stroke="#fd5300" stroke-width="15" stroke-opacity="0" fill="none"></circle>'
-        svgRings += '<circle class="hub-map-heat-marker-4" cx="152.5" cy="152.5" r="145" stroke="#fd5300" stroke-width="15" stroke-opacity="0" fill="none"></circle>'
+        var svgRings = '<svg class="hub-map-heat-marker" width="340" height="340">';
+        svgRings += '<circle class="hub-map-heat-marker-1" cx="170" cy="170" r="42.5" stroke="#fd5300" stroke-width="15" stroke-opacity="0" fill="none"></circle>';
+        svgRings += '<circle class="hub-map-heat-marker-2" cx="170" cy="170" r="80" stroke="#fd5300" stroke-width="15" stroke-opacity="0" fill="none"></circle>'
+        svgRings += '<circle class="hub-map-heat-marker-3" cx="170" cy="170" r="117.5" stroke="#fd5300" stroke-width="15" stroke-opacity="0" fill="none"></circle>'
+        svgRings += '<circle class="hub-map-heat-marker-4" cx="170" cy="170" r="155" stroke="#fd5300" stroke-width="15" stroke-opacity="0" fill="none"></circle>'
         svgRings += '</svg>';
 
         var latlng = this._getLatLngFromPoint(dataPoint);
