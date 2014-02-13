@@ -22,10 +22,10 @@ NikeCollectionMapView.prototype.notify = function (collection) {
     var ring3 = d3.select($(marker._icon).find('.hub-map-heat-marker-3')[0]);
     var ring4 = d3.select($(marker._icon).find('.hub-map-heat-marker-4')[0]);
 
-    ring1.attr('stroke-opacity', '0.5').transition().duration(1000).attr('stroke-opacity', '0');
-    ring2.transition().delay(10).attr('stroke-opacity', '0.375').transition().duration(1000).attr('stroke-opacity', '0');
-    ring3.transition().delay(100).attr('stroke-opacity', '0.25').transition().duration(1000).attr('stroke-opacity', '0');
-    ring4.transition().delay(200).attr('stroke-opacity', '0.05').transition().duration(1000).attr('stroke-opacity', '0');
+    ring1.transition().attr('stroke-opacity', '0.5').transition().duration(1000).attr('stroke-opacity', '0');
+    ring2.transition().delay(10).attr('stroke-opacity', '0.3').transition().duration(1000).attr('stroke-opacity', '0');
+    ring3.transition().delay(100).attr('stroke-opacity', '0.2').transition().duration(1000).attr('stroke-opacity', '0');
+    ring4.transition().delay(200).attr('stroke-opacity', '0.07').transition().duration(1000).attr('stroke-opacity', '0');
 };
 
 NikeCollectionMapView.prototype._drawMap = function () {
@@ -74,10 +74,10 @@ NikeCollectionMapView.prototype._drawMarker = function (dataPoint) {
         }
 
         var svgRings = '<svg class="hub-map-heat-marker" width="340" height="340">';
-        svgRings += '<circle class="hub-map-heat-marker-1" cx="170" cy="170" r="42.5" stroke="#fd5300" stroke-width="15" stroke-opacity="0" fill="none"></circle>';
-        svgRings += '<circle class="hub-map-heat-marker-2" cx="170" cy="170" r="80" stroke="#fd5300" stroke-width="15" stroke-opacity="0" fill="none"></circle>'
-        svgRings += '<circle class="hub-map-heat-marker-3" cx="170" cy="170" r="117.5" stroke="#fd5300" stroke-width="15" stroke-opacity="0" fill="none"></circle>'
-        svgRings += '<circle class="hub-map-heat-marker-4" cx="170" cy="170" r="155" stroke="#fd5300" stroke-width="15" stroke-opacity="0" fill="none"></circle>'
+        svgRings += '<circle class="hub-map-heat-marker-1" cx="170" cy="170" r="42.5" stroke="#fd5300" stroke-width="8" stroke-opacity="0" fill="none"></circle>';
+        svgRings += '<circle class="hub-map-heat-marker-2" cx="170" cy="170" r="62.5" stroke="#fd5300" stroke-width="8" stroke-opacity="0" fill="none"></circle>';
+        svgRings += '<circle class="hub-map-heat-marker-3" cx="170" cy="170" r="82.5" stroke="#fd5300" stroke-width="8" stroke-opacity="0" fill="none"></circle>';
+        svgRings += '<circle class="hub-map-heat-marker-4" cx="170" cy="170" r="102.5" stroke="#fd5300" stroke-width="8" stroke-opacity="0" fill="none"></circle>';
         svgRings += '</svg>';
 
         var latlng = this._getLatLngFromPoint(dataPoint);
@@ -97,6 +97,35 @@ NikeCollectionMapView.prototype._drawMarker = function (dataPoint) {
         this._addMarkerToMap(marker);
         this._collectionToMarker[collection.id] = marker;
 
-        //if (collection.id == 48078130) setTimeout(function () { setInterval(function () {this.notify(collection); }.bind(this), 2000) }.bind(this), 2000);
+        if (collection.id == 48078130) setTimeout(function () { setInterval(function () {this.notify(collection); }.bind(this), 2000) }.bind(this), 2000);
+
+        var num = collection.heatIndex;
+        var read = function (data) {
+            num--;
+
+            var contentItem = data;
+            var thumbnailUrl;
+            if (contentItem.attachments.length && contentItem.attachments[0].thumbnail_url) {
+                thumbnailUrl = contentItem.attachments[0].thumbnail_url;
+            } else if (contentItem.author && contentItem.author.avatar) {
+                thumbnailUrl = contentItem.author.avatar;
+            }
+
+            var shiftDistance = 50;
+            function getRandomArbitrary(min, max) {
+                return Math.random() * (max - min) + min;
+            }
+            var markerEl = $('<img class="hub-map-marker-thumbnail" src="'+thumbnailUrl+'">');
+            markerEl.css({
+                top: getRandomArbitrary(-1*shiftDistance, shiftDistance)+'px',
+                left: getRandomArbitrary(-1*shiftDistance, shiftDistance)+'px'
+            });
+            $(marker._icon).find('.hub-map-marker-bg').append(markerEl);
+
+            if (num < 0) {
+                collectionArchive.removeListener('data', read);
+            }
+        };
+        collectionArchive.on('data', read);
     }.bind(this));
 };
