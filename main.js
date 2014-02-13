@@ -198,7 +198,7 @@ function (Collection, ListView, WallView, base64) {
             // And go...
             this.initCollections();
             // this.initCarousel();
-            // this.initFeedScroller();
+            this.initFeedScroller();
             this.initFlipCounter();
         },
         /**
