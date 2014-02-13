@@ -63,7 +63,7 @@ NikeCollectionMapView.prototype._drawMarker = function (dataPoint) {
                         thumbnail_url: thumbnailUrl || ''
                     }),
                     iconSize: [44,48],
-                    iconAnchor: [22,48],
+                    //iconAnchor: [22,48],
                     content: contentItem
                 })
             }
