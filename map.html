@@ -15,15 +15,25 @@
         }
         .hub-map-view .hub-map-content-marker .hub-map-marker-bg {
             background-image: none;
+            position: relative;
+            z-index: 1;
         }
         .hub-map-view .hub-map-marker-thumbnail {
-            width: 40px;
-            height: 40px;
+            width: 50px;
+            height: 50px;
             background-color: #FFF;
             border: 3px solid #FFF;
-            -webkit-box-shadow: 0px 0px 3px 1px rgba(50, 50, 50, 0.75);
-            -moz-box-shadow:    0px 0px 3px 1px rgba(50, 50, 50, 0.75);
-            box-shadow:         0px 0px 3px 1px rgba(50, 50, 50, 0.75);
+            -webkit-box-shadow: 1px 1px 5px 0px rgba(0, 0, 0, 0.45);
+            -moz-box-shadow:    1px 1px 5px 0px rgba(0, 0, 0, 0.45);
+            box-shadow:         1px 1px 5px 0px rgba(0, 0, 0, 0.45);
+        }
+        .hub-country.leaflet-clickable {
+            cursor: inherit;
+        }
+        .hub-map-heat-marker {
+            position: relative;
+            top: -172.5px;
+            left: -122.5px;
         }
     </style>
     <link rel="stylesheet" href="http://cdn.livefyre.com/libs/sdk/v2.5.0/streamhub-sdk.min.css" />
