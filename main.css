@@ -263,3 +263,12 @@ body {
 .slate .static span {
     font-weight: bold;
 }
+
+/***
+ * Counters
+ ***/
+.sm-counter-container {
+    bottom: -50px;
+    position: absolute;
+    z-index: 10;
+}

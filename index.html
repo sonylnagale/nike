@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <link rel="stylesheet" href="http://cdn.livefyre.com/libs/sdk/v2.5.1/streamhub-sdk.min.css" />
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
-        <script src="http://cdn.livefyre.com/libs/sdk/v2.5.1/streamhub-sdk.min.js"></script>
-        <script src="http://cdn.livefyre.com/libs/apps/Livefyre/streamhub-wall/v2.2.3-build.143/streamhub-wall.min.js"></script>
+        <link rel="stylesheet" href="http://cdn.livefyre.com/libs/sdk/v2.6.3/streamhub-sdk.min.css" />
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+        <script src="http://cdn.livefyre.com/libs/sdk/v2.6.3/streamhub-sdk.min.js"></script>
+        <script src="http://cdn.livefyre.com/libs/apps/Livefyre/streamhub-wall/v2.2.4-build.157/streamhub-wall.min.js"></script>
 
         <!-- Bootstrap 3 -->
         <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
@@ -13,6 +13,11 @@
 
         <link rel="stylesheet" href="fonts/ostrich/ostrich.css" />
         <link rel="stylesheet" href="main.css" />
+
+        <!-- Flip Clock -->
+        <script src="libs/FlipClock/compiled/flipclock.js"></script>
+        <link rel="stylesheet" href="libs/FlipClock/compiled/flipclock.css" />
+        <!-- End Flip Clock -->
     </head>
     <body>
         <div id="carousel" class="carousel slide">
@@ -20,8 +25,8 @@
             <div class="carousel-inner">
               <div class="item active">
                     <div class="slate">
-                        <div class="slate-content">
-                            <img src="imgs/collective/collective.png" />
+                        <div class="lrg-counter-container">
+                            <div class="lrg-counter"></div>
                         </div>
                     </div>
                 </div>
@@ -51,7 +56,9 @@
                     </div>
                 </div>
             </div>
-
+            <div class="sm-counter-container">
+                <div class="sm-counter"></div>
+            </div>
             <!-- Indicators 
             <ol class="carousel-indicators">
                 <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
