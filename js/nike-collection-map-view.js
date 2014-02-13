@@ -1,3 +1,4 @@
+var $ = Livefyre.require('streamhub-sdk/jquery');
 var CollectionMapView = Livefyre.require('streamhub-map/views/collection-map-view');
 var StateToContent = Livefyre.require('streamhub-sdk/content/state-to-content');
 var MarkerTemplate = Livefyre.require('hgn!streamhub-map/views/templates/marker');
@@ -7,6 +8,38 @@ var NikeCollectionMapView = function (opts) {
     CollectionMapView.call(this, opts);
 };
 inherits(NikeCollectionMapView, CollectionMapView);
+
+NikeCollectionMapView.prototype._drawMap = function () {
+    this._map = new L.Map(this.el, this._leafletMapOptions).setView(
+        this._leafletMapOptions.center || [0,0],
+        this._leafletMapOptions.zoom || 2
+    );
+
+    var countryStyle = {
+        'color': "#333",
+        'stroke': '#333',
+        'weight': 0,
+        'className': 'hub-country',
+        'fillColor': 'url(#countryPattern)',
+        'fillOpacity': '1'
+    };
+    var countriesLayer = L.geoJson(countriesJson, {
+        style: countryStyle
+    });
+    countriesLayer.addTo(this._map);
+
+    var svg = d3.select('svg');
+    svg.append('defs')
+       .append('pattern')
+       .attr('id', 'countryPattern')
+       .attr('patternUnits', 'userSpaceOnUse')
+       .attr('width', '3')
+       .attr('height', '3')
+       .append('image')
+       .attr('xlink:href', '/imgs/map-fill.png')
+       .attr('width', '3')
+       .attr('height', '3');
+};
 
 NikeCollectionMapView.prototype._drawMarker = function (dataPoint) {
     var collection = dataPoint.getCollection();
