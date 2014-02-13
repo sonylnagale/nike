@@ -8,6 +8,7 @@ var NikeCollectionMapView = function (opts) {
     CollectionMapView.call(this, opts);
 
     this._collectionToMarker = {};
+    this._shiftDistance = opts.shiftDistance || 50;
 };
 inherits(NikeCollectionMapView, CollectionMapView);
 
@@ -26,6 +27,26 @@ NikeCollectionMapView.prototype.notify = function (collection) {
     ring2.transition().delay(10).attr('stroke-opacity', '0.3').transition().duration(1000).attr('stroke-opacity', '0');
     ring3.transition().delay(100).attr('stroke-opacity', '0.2').transition().duration(1000).attr('stroke-opacity', '0');
     ring4.transition().delay(200).attr('stroke-opacity', '0.07').transition().duration(1000).attr('stroke-opacity', '0');
+};
+
+NikeCollectionMapView.prototype.add = function (collection) {
+    collection.on('change:heatIndex', function () {
+        var marker = this._collectionToMarker[collection.id];
+        if (! marker) {
+            return;
+        }
+
+        marker.removeFrom(this._map);
+        
+        // Adapt Collection to CollectionPoint
+        var location = this._collectionToLocation[collection.id];
+        if (!location) {
+            return;
+        }
+        var collectionPoint = new CollectionPoint(collection, location);
+        CollectionMapView.prototype.add.call(this, collectionPoint);
+    });
+    CollectionMapView.prototype.add.call(this, collection);
 };
 
 NikeCollectionMapView.prototype._drawMap = function () {
@@ -64,7 +85,7 @@ NikeCollectionMapView.prototype._drawMarker = function (dataPoint) {
     var collection = dataPoint.getCollection();
     var collectionArchive = collection.createArchive();
 
-    collectionArchive.once('data', function (data) {
+    var fetchContentForAvatars = function (data) {
         var thumbnailUrl;
         var contentItem = data;
         if (contentItem.attachments.length && contentItem.attachments[0].thumbnail_url) {
@@ -97,9 +118,7 @@ NikeCollectionMapView.prototype._drawMarker = function (dataPoint) {
         this._addMarkerToMap(marker);
         this._collectionToMarker[collection.id] = marker;
 
-        if (collection.id == 48078130) setTimeout(function () { setInterval(function () {this.notify(collection); }.bind(this), 2000) }.bind(this), 2000);
-
-        var num = collection.heatIndex;
+        var num = Math.min(Math.round(collection.heatIndex), 5);
         var read = function (data) {
             num--;
 
@@ -111,21 +130,23 @@ NikeCollectionMapView.prototype._drawMarker = function (dataPoint) {
                 thumbnailUrl = contentItem.author.avatar;
             }
 
-            var shiftDistance = 50;
             function getRandomArbitrary(min, max) {
                 return Math.random() * (max - min) + min;
             }
             var markerEl = $('<img class="hub-map-marker-thumbnail" src="'+thumbnailUrl+'">');
             markerEl.css({
-                top: getRandomArbitrary(-1*shiftDistance, shiftDistance)+'px',
-                left: getRandomArbitrary(-1*shiftDistance, shiftDistance)+'px'
+                top: getRandomArbitrary(-1*this._shiftDistance, this._shiftDistance)+'px',
+                left: getRandomArbitrary(-1*this._shiftDistance, this._shiftDistance)+'px'
             });
             $(marker._icon).find('.hub-map-marker-bg').append(markerEl);
 
             if (num < 0) {
                 collectionArchive.removeListener('data', read);
+                collectionArchive.pause();
             }
-        };
+        }.bind(this);
         collectionArchive.on('data', read);
-    }.bind(this));
+    }.bind(this);
+
+    collectionArchive.once('data', fetchContentForAvatars);
 };

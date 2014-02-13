@@ -10,12 +10,12 @@ var indonesiaLatLon = { lat: -0.789275, lon: 113.921327 };
 // Collection to Location Mapping
 //TODO(ryanc): collectionId -> lat/lon or articleId -> lat/lon
 var collectionToLocation = {
-    47993636: sfLatLon,
-    48084932: usaLatLon,
-    48078130: europeLatLon,
-    48081257: southAmericaLatLon,
-    48089894: indiaLatLon,
-    48103282: indonesiaLatLon
+    60969431: sfLatLon,
+    58265981: usaLatLon,
+    58201034: europeLatLon,
+    58366495: southAmericaLatLon,
+    46862364: indiaLatLon,
+    48214966: indonesiaLatLon
 };
 
 var mapView = window.view = new NikeCollectionMapView({
@@ -23,8 +23,10 @@ var mapView = window.view = new NikeCollectionMapView({
     ,collectionToLocation: collectionToLocation
 });
 
-var hotCollectionsStream = new MockHotCollectionsStream({
-    network: 'livefyre.com'
+var hotCollectionsStream = new PollingHotCollections({
+    network: 'strategy-prod.fyre.co',
+    siteId: '340628',
+    frequency: 1000 * 3
 });
 
 hotCollectionsStream.pipe(mapView);
