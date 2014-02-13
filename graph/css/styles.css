@@ -1,0 +1,45 @@
+@import url(http://fonts.googleapis.com/css?family=Open+Sans+Condensed:700);
+
+body {
+	font-family: "Open Sans Condensed", sans-serif;
+	margin:0;
+	padding:0;
+}
+
+#graphMain {
+	width: 1920px;
+	height: 1080px;
+	background-image: url(../img/bg.jpg);
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.x.axis path {
+  display: none;
+}
+
+.line {
+  fill: none;
+  stroke: #fd641a;
+  stroke-width: 13px;
+  color: #fd5502;
+}
+.tick {
+	stroke: #eee;
+	stroke-width:0.5px;
+}
+#graph {
+	width: 1920px;
+	height: 1080px;
+}
+.legend {
+	cursor:pointer;
+}
+
+.legend text {
+	font-size: 14px;
