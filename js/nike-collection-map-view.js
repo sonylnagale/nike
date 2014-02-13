@@ -9,24 +9,25 @@ var NikeCollectionMapView = function (opts) {
 
     this._collectionToMarker = {};
     this._shiftDistance = opts.shiftDistance || 50;
+
+    $('body').on('counterTick.nike', function () {
+        var colIds = Object.keys(this._collectionToMarker);
+        var markerToNotify = this._collectionToMarker[colIds[NikeCollectionMapView.getRandom(0, colIds.length-1)]];
+        this.notifyMarker(markerToNotify);
+    }.bind(this));
 };
 inherits(NikeCollectionMapView, CollectionMapView);
 
-NikeCollectionMapView.prototype.notify = function (collection) {
-    var marker = this._collectionToMarker[collection.id];
-    if (!marker) {
-        return;
-    }
-
+NikeCollectionMapView.prototype.notifyMarker = function (marker) {
     var ring1 = d3.select($(marker._icon).find('.hub-map-heat-marker-1')[0]);
     var ring2 = d3.select($(marker._icon).find('.hub-map-heat-marker-2')[0]);
     var ring3 = d3.select($(marker._icon).find('.hub-map-heat-marker-3')[0]);
     var ring4 = d3.select($(marker._icon).find('.hub-map-heat-marker-4')[0]);
 
-    ring1.transition().attr('stroke-opacity', '0.5').transition().duration(1000).attr('stroke-opacity', '0');
-    ring2.transition().delay(10).attr('stroke-opacity', '0.3').transition().duration(1000).attr('stroke-opacity', '0');
-    ring3.transition().delay(100).attr('stroke-opacity', '0.2').transition().duration(1000).attr('stroke-opacity', '0');
-    ring4.transition().delay(200).attr('stroke-opacity', '0.07').transition().duration(1000).attr('stroke-opacity', '0');
+    ring1.transition().attr('stroke-opacity', '0.5').transition().duration(1500).attr('stroke-opacity', '0');
+    ring2.transition().delay(10).attr('stroke-opacity', '0.3').transition().duration(1500).attr('stroke-opacity', '0');
+    ring3.transition().delay(100).attr('stroke-opacity', '0.2').transition().duration(1500).attr('stroke-opacity', '0');
+    ring4.transition().delay(200).attr('stroke-opacity', '0.07').transition().duration(1500).attr('stroke-opacity', '0');
 };
 
 NikeCollectionMapView.prototype.add = function (collection) {
@@ -130,13 +131,10 @@ NikeCollectionMapView.prototype._drawMarker = function (dataPoint) {
                 thumbnailUrl = contentItem.author.avatar;
             }
 
-            function getRandomArbitrary(min, max) {
-                return Math.random() * (max - min) + min;
-            }
             var markerEl = $('<img class="hub-map-marker-thumbnail" src="'+thumbnailUrl+'">');
             markerEl.css({
-                top: getRandomArbitrary(-1*this._shiftDistance, this._shiftDistance)+'px',
-                left: getRandomArbitrary(-1*this._shiftDistance, this._shiftDistance)+'px'
+                top: NikeCollectionMapView.getRandom(-1*this._shiftDistance, this._shiftDistance)+'px',
+                left: NikeCollectionMapView.getRandom(-1*this._shiftDistance, this._shiftDistance)+'px'
             });
             $(marker._icon).find('.hub-map-marker-bg').append(markerEl);
 
@@ -149,4 +147,8 @@ NikeCollectionMapView.prototype._drawMarker = function (dataPoint) {
     }.bind(this);
 
     collectionArchive.once('data', fetchContentForAvatars);
+};
+
+NikeCollectionMapView.getRandom = function (min, max) {
+    return Math.round(Math.random() * (max - min) + min);
 };

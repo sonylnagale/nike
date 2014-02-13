@@ -25,8 +25,11 @@ var mapView = window.view = new NikeCollectionMapView({
 
 var hotCollectionsStream = new PollingHotCollections({
     network: 'strategy-prod.fyre.co',
-    siteId: '340628',
-    frequency: 1000 * 3
+    siteId: '340628'
 });
 
 hotCollectionsStream.pipe(mapView);
+
+setInterval(function () {
+    $('body').trigger('counterTick.nike');
+}, 750);
