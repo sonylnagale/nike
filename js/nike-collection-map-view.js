@@ -110,11 +110,19 @@ NikeCollectionMapView.prototype._drawMarker = function (dataPoint) {
                     html: MarkerTemplate({
                         thumbnail_url: thumbnailUrl || ''
                     }) + svgRings,
-                    iconSize: [53,53],
+                    iconSize: [43,43],
                     content: contentItem
                 })
             }
         );
+        setInterval(function () {
+            var thumbnailEls = $(marker._icon).find('.hub-map-marker-thumbnail');
+            var thumbnailEl = thumbnailEls.eq(NikeCollectionMapView.getRandom(0, thumbnailEls.length-1));
+            thumbnailEl.addClass('hub-map-marker-zoom');
+            setTimeout(function () {
+                thumbnailEl.removeClass('hub-map-marker-zoom')
+            }, 3000);
+        }, NikeCollectionMapView.getRandom(5000,10000));
 
         this._addMarkerToMap(marker);
         this._collectionToMarker[collection.id] = marker;
@@ -150,5 +158,5 @@ NikeCollectionMapView.prototype._drawMarker = function (dataPoint) {
 };
 
 NikeCollectionMapView.getRandom = function (min, max) {
-    return Math.round(Math.random() * (max - min) + min);
+    return Math.floor(Math.random() * (max - min) + min);
 };
