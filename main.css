@@ -2,12 +2,16 @@
  * GENERAL STYLES
  **/
 body {
-    background: url(imgs/bg.png) top left no-repeat;
+    background-image: url(imgs/bg.png);
+    background-size: cover;
     font-family: TradeCopy;
-    height: 1080px;
     margin: 0px;
     padding: 0px;
+}
+#carousel {
     width: 1920px;
+    height: 1080px;
+    margin: 0 auto;
 }
 .item {
     max-height: 1080px;
