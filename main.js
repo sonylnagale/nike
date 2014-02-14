@@ -357,5 +357,5 @@ function (Collection, ListView, WallView) {
         }
     };
     
-    Hub.init();
+    $(window).on('load', function () { Hub.init(); });
 }); 

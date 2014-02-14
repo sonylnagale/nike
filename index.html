@@ -65,8 +65,10 @@
                     </div>
                 </div>
                 <div class="item" data-next-slide="media-wall">
+                    <div id="avatar-wall" class="slate"></div>
+                    <link rel="stylesheet" href="/css/avatar-wall.css" />
                     <div class="slate">
-                        <div class="slate-content">
+                        <div class="slate-content" style="position: relative; z-index: 10;">
                             <div class="counter-wrapper">
                                 <div class="counter lrg-counter-container">
                                     <div class="lrg-counter"></div>
@@ -76,6 +78,7 @@
                             <img class="counter-tag-text" src="imgs/Total_tweets_and_counting.png" />
                         </div>
                     </div>
+                    <link rel="stylesheet" href="/css/avatar-wall.css" />
                 </div>
                 <div class="item">
                     <div class="wall-container">
@@ -107,5 +110,10 @@
             -->
         </div>
         <script src="main.js"></script>
+
+        <!-- avatar wall scripts -->
+        <script type="text/javascript" src="/js/avatar-content-view.js"></script>
+        <script type="text/javascript" src="/js/avatar-wall-view.js"></script>
+        <script type="text/javascript" src="/js/counter-wall.js"></script>
     </body>
 </html>
