@@ -158,11 +158,6 @@ function (Collection, ListView, WallView) {
         firstRun: true,
 
         /**
-         * Flag if this is the first cycle of the carousel
-         */
-        firstRun: true,
-
-        /**
          * Configuration
          **/
         config: {
