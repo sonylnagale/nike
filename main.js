@@ -84,9 +84,11 @@ function (Collection, ListView, WallView, base64) {
     FlipCounter.prototype.callback = function (data) {
         var counts = this._dataAdapter.toModel(data.data[this.siteId][this.articleIds[0]]);
         var clock = this._clockInstances[0];
+
         if (clock.getTime().time == 0) {
             for (var i = 0, len = this._clockInstances.length; i < len; i++) {
                 this._clockInstances[i].setTime(counts.total);
+                this._addCommas(this._clockInstances[i]);
             }
             this.tick(1, this.defaultInterval);
         }
@@ -107,12 +109,25 @@ function (Collection, ListView, WallView, base64) {
         else {
             step = -1;
         }
+
         $("body").trigger("increment.counter");
         setTimeout(this.tick.bind(this, step, interval), interval);
     };
     FlipCounter.prototype.update = function () {
+        
+
         for (var i = 0, len = this._clockInstances.length; i < len; i++) {
             this._clockInstances[i].increment();
+            this._addCommas(this._clockInstances[i]);
+        }
+    };
+    FlipCounter.prototype._addCommas = function (clockInstance) {
+        var numDigits = clockInstance.lists.length;
+
+        if (numDigits > 3) {
+            for (var i = numDigits, step = 3; i > step; i -= step) {
+                $(clockInstance.lists[i - step])[0].$obj.addClass("comma");
+            }
         }
     };
 
@@ -197,7 +212,7 @@ function (Collection, ListView, WallView, base64) {
 
             // And go...
             this.initCollections();
-            // this.initCarousel();
+            this.initCarousel();
             this.initFeedScroller();
             this.initFlipCounter();
         },
@@ -208,6 +223,17 @@ function (Collection, ListView, WallView, base64) {
             var $carousel = $(".carousel");
             var self = this;
 
+            $carousel.on("slide.bs.carousel", function () {
+                window.active = $activeSlide = $carousel.find(".active");
+
+                if ($activeSlide.attr("data-next-slide") == "counter") {
+                    $(".sm-counter-wrapper").hide();
+                }
+                else {
+                    $(".sm-counter-wrapper").show();   
+                }
+            });
+
             $carousel.on("slid.bs.carousel", function () {
                 if (self.config.reloadCycle > 0) {
                     if ((self.config.reloadCycle * self.totNumSlides) == ++self.slideCounter) {
@@ -215,7 +241,6 @@ function (Collection, ListView, WallView, base64) {
                         location.reload();
                     }
                 }
-                
             });
 
             $carousel.carousel({
@@ -250,24 +275,6 @@ function (Collection, ListView, WallView, base64) {
             updater.pipe(wallView);
             archive.pipe(wallView.more);
 
-            // var ListViewExt = function (opts) {
-            //     ListView.call(this, opts);
-            // };
-            // ListViewExt.prototype = new ListView();
-
-            // ListViewExt.prototype.add = function (newView) {
-            //     if (newView &&
-            //         newView.author &&
-            //         newView.author.avatar) {
-            //             var avatar = newView.author.avatar;
-                    
-            //             if (avatar.search(/http:\/\/pbs\.twimg\.com\/profile_images\/[0-9]+\//) > -1) {
-            //                 newView.author.avatar = avatar.replace("_normal", ""); 
-            //             }
-            //     }
-            //     ListView.prototype.add.call(this, newView);
-            // };
-
             var listView = new ListView({
                 el: document.getElementById("feed")
             });
@@ -279,11 +286,6 @@ function (Collection, ListView, WallView, base64) {
          * Does the fading in and out of the list feed
          **/
         initFeedScroller: function () {
-            // Ghetto, account for loading time
-            // setTimeout(function() {
-            //     $("#feed .hub-content-container").eq(0).find("article").show();
-            // }, 1000);
-
             var fn = function () {
                 $cur = $("#feed .hub-content-container");
                 $cur.eq(0).find("article").fadeOut("slow", function () {

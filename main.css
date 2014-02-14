@@ -28,7 +28,6 @@ body {
 }
 #wall-container, #feed-container{
         background: url('imgs/kdauntpearl.png') no-repeat left 225px;
-    
 }
 
 #wall-container:after{
@@ -149,11 +148,10 @@ content .content-created-at a:link{
 #wall .content .content-created-at {
     margin: 16px 0px 0px 0px;
     font-size: 14px;
-    
 }
 
 #wall .content .content-created-at:before{
-    content:"";
+    content: "";
     background: no-repeat left top url('imgs/smalltwitterbird.png');
     height: 13px;
     width: 20px;
@@ -251,7 +249,6 @@ content .content-created-at a:link{
 
 #feed .content .content-created-at:after {
     content:" ago";
-
 }
 
 #feed .content-with-image .content-created-at {
@@ -362,7 +359,6 @@ content .content-created-at a:link{
     font-weight: bold;
 }
 
-
 /**
  * KD MEMORIUM
  **/
@@ -395,34 +391,31 @@ content .content-created-at a:link{
     right: 70px;
     bottom: 70px;
  }
- 
- 
- 
+   
  /**
   * BIG SHOE
   **/
-  
-  .bigshoe{
+.bigshoe {
     position: absolute;
     bottom: 0;
     left: 12%;
     z-index: 99;
-  }
-  
-  .shoe p{
+}
+
+.shoe p {
     font-family: FuturaBold;
     font-weight: bold;
     text-transform: uppercase;
-  }
-  
-  .nikeav{
+}
+
+.nikeav {
     position: absolute;
     top: 120px;
     left: 50%;
     margin-left: -36px;
-  }
-  
-  .shoe .handle{
+}
+
+.shoe .handle {
     font-family: TradeCaps;
     font-size: 25px;
     color: #666666;
@@ -431,28 +424,125 @@ content .content-created-at a:link{
     top: 170px;
     left: 50%;
     margin-left: -65px;
-  }
-  
-  .subtitle{
+}
+
+.subtitle {
     font-size: 54px;
     color: black;
     position: relative;
     top: -170px;
-    
-  }
-  .title{
+}
+.title {
     font-size: 205px;
     color: black;
     position: relative;
     top: -150px;
-  }
+}
 
 /***
  * Counters
  ***/
+.counter .flip-clock-wrapper {
+    margin: 0px;
+}
+.counter .flip-clock-wrapper .flip {
+    background: #fd5300 url(imgs/Ticker_Tiles.png) no-repeat top center;
+    border-radius: 0px 0px;
+    box-shadow: 0px 0px 0px;
+    margin: 0px 3.5px 0px 3.5px;
+}
+.counter .flip-clock-wrapper ul li a div.up:after {
+    width: 0px;
+}
+.counter .flip-clock-wrapper ul li a .up div.inn {
+    background: #fd5300 url(imgs/Ticker_Tiles.png) no-repeat top center;
+    border-radius: 0px 0px;
+    color: #FFF;
+    font-family: TradeCaps;
+    text-shadow: none;
+}
+.counter .flip-clock-wrapper ul li a .down div.inn {
+    background: #fd5300 url(imgs/Ticker_Tiles.png) no-repeat bottom center;
+    background-size: 100%;
+    border-radius: 0px 0px;
+    color: #FFF;
+    font-family: TradeCaps;
+    text-shadow: none;
+}
+/* Large Counter */
+.counter-twitter-bird {
+    display: inline-block;
+    /*margin-top: 5px;*/
+    vertical-align: top;
+}
+.lrg-counter-container,
 .sm-counter-container {
-    bottom: 50px;
-    left: 40%;
+    display: inline-block;
+}
+.counter-tag-text {
+    margin-top: 45px;
+}
+.counter .lrg-counter ul {
+    width: 205px;
+    height: 282px;
+    font-size: 242px;
+    line-height: 280px;
+}
+.counter .lrg-counter ul li a div {
+    font-size: 242px;
+}
+.counter .lrg-counter ul li a div.up div.inn,
+.counter .lrg-counter ul li a div.down div.inn {
+    padding-top: 30px;
+}
+.counter .lrg-counter ul li a div div.inn {
+    font-size: 242px;
+ }
+
+.counter .lrg-counter .comma {
+    margin-left: 56px;
+}
+.counter .lrg-counter .comma:before {
+    background: url(imgs/Comma.png) no-repeat top center;
+    background-size: 100%;
+    bottom: 0px;
+    content: "";
+    height: 45px;
+    left: -40px;
     position: absolute;
-    z-index: 10;
+    width: 24px;
+}
+/* Small Counter */
+.sm-counter-wrapper {
+    bottom: 40px;
+    left: 42%;
+    position: absolute;
+    z-index: 100;
+}
+.sm-counter-wrapper .counter-twitter-bird {
+    max-height: 90px;
+    max-width: 90px;
+}
+.sm-counter .inn.flip-clock-before {
+    padding-top: 14px;
+}
+.counter .sm-counter ul li a div.up div.inn,
+.counter .sm-counter ul li a div.down div.inn {
+    padding-top: 12px;
+}
+.counter .sm-counter.flip-clock-wrapper .flip {
+    margin: 0px 1px 0px 1px;
+}
+.counter .sm-counter.flip-clock-wrapper .comma {
+    margin-left: 22px;
+}
+.counter .sm-counter .comma:before {
+    background: url(imgs/Comma.png) no-repeat top center;
+    background-size: 100%;
+    bottom: 0px;
+    content: "";
+    height: 22.5px;
+    left: -17px;
+    position: absolute;
+    width: 12px;
 }

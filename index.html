@@ -27,35 +27,44 @@
         <div id="carousel" class="carousel slide">
             <!-- Slides -->
             <div class="carousel-inner">
-                <div class="item active">
-                    <div class="slate">
-                        <div class="lrg-counter-container">
-                            <div class="lrg-counter"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="item">
+                <div class="item active" data-next-slide="counter">
                     <div id="feed-container">
                         <div id="feed"></div>
                     </div>
                 </div>
-                <div class="item ">
+                <div class="item" data-next-slide="media-wall">
+                    <div class="slate">
+                        <div class="slate-content">
+                            <div class="counter-wrapper">
+                                <div class="counter lrg-counter-container">
+                                    <div class="lrg-counter"></div>
+                                </div>
+                                <img class="counter-twitter-bird" src="imgs/Counter_Twitterbird.png" />
+                            </div>
+                            <img class="counter-tag-text" src="imgs/Total_tweets_and_counting.png" />
+                        </div>
+                    </div>
+                </div>
+                <div class="item">
                     <div id="wall-container">
                         <div id="wall"></div>
                     </div>
                 </div>
-                <div class="item ">
+                <div class="item">
                     <div class="slate shoe">
                         <div class="slate-content static">
-                        <img  class="bigshoe animated3 fadeInUp" src="imgs/shoe.png" alt="" />
+                            <img  class="bigshoe animated3 fadeInUp" src="imgs/shoe.png" alt="" />
                             <p class="subtitle animated18 fadeInDown">Introducing the kd VI</p>
                             <p class="title animated8 fadeInDown"><span>AUNT PEARL</span></p>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="sm-counter-container">
-                <div class="sm-counter"></div>
+            <div class="counter-wrapper sm-counter-wrapper">
+                <div class="counter sm-counter-container">
+                    <div class="sm-counter"></div>
+                </div>
+                <img class="counter-twitter-bird" src="imgs/Counter_Twitterbird.png" />
             </div>
             <!-- Indicators 
             <ol class="carousel-indicators">
