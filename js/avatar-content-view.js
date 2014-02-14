@@ -1,4 +1,3 @@
-var $ = Livefyre.require('streamhub-sdk/jquery');
 var ContentView = Livefyre.require('streamhub-sdk/content/views/content-view');
 var inherits = Livefyre.require('inherits');
 
