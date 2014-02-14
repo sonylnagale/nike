@@ -149,7 +149,8 @@ function (Collection, ListView, WallView) {
         /*
          * Pointer to list feed
          */
-        feedInstance: null,
+        feedInstance1: null,
+        feedInstance2: null,
 
         /**
          * Flag if this is the first cycle of the carousel
@@ -169,13 +170,18 @@ function (Collection, ListView, WallView) {
             // The number of rotations before the carousel reloads
             reloadCycle: 0,
             
-            // The media wall collection info
+            // Collections info
             mediaWall: {
                 network: "strategy-prod.fyre.co",
                 siteId: '340628',
                 articleId: 'custom-1389909647018'
             },
-            listFeed: {
+            listFeed1: {
+                network: "strategy-prod.fyre.co",
+                siteId: '340628',
+                articleId: 'custom-1392076496202'
+            },
+            listFeed2: {
                 network: "strategy-prod.fyre.co",
                 siteId: '340628',
                 articleId: 'custom-1392076496202'
@@ -183,9 +189,10 @@ function (Collection, ListView, WallView) {
 
             // ncomments config
             ncomments: {
-                network : "strategy-prod.fyre.co",
+                network: "strategy-prod.fyre.co",
                 siteId: "340628",
-                articleIds: ["custom-1392076496202"]
+                articleIds: ["custom-1392076496202"],
+                targetEls: [".lrg-counter", ".sm-counter"],
             },
             get: function (key) {
                  return this[key];
@@ -229,9 +236,10 @@ function (Collection, ListView, WallView) {
 
             // And go...
             this.initCollections();
-            this.initCarousel();
-            this.initFeedScroller();
+            this.initFeedScroller("#feed1");
+            this.initFeedScroller("#feed2");
             this.initFlipCounter();
+            this.initCarousel();
         },
 
         /**
@@ -308,24 +316,33 @@ function (Collection, ListView, WallView) {
             // updater.pipe(wallView);
             // archive.pipe(wallView.more);
 
-            var listView = new ListView({
-                el: document.getElementById("feed")
+            var listView1 = new ListView({
+                el: document.getElementById("feed1")
             });
 
-            var collection2 = new Collection(this.config.listFeed);
-            this.feedInstance = collection2;
-            collection2.pipe(listView);
+            var collection2 = new Collection(this.config.listFeed1);
+            this.feedInstance1 = collection2;
+            collection2.pipe(listView1);
+
+            var listView2 = new ListView({
+                el: document.getElementById("feed2")
+            });
+
+            var collection3 = new Collection(this.config.listFeed2);
+            this.feedInstance2 = collection3;
+            collection3.pipe(listView2);
         },
 
         /**
          * Does the fading in and out of the list feed
          **/
-        initFeedScroller: function () {
+        initFeedScroller: function (targetElId) {
+            var $cur;
             var fn = function () {
-                $cur = $("#feed .hub-content-container");
+                $cur = $(targetElId + " .hub-content-container");
                 $cur.eq(0).find("article").fadeOut("slow", function () {
                     $cur.eq(1).find("article").fadeIn("slow", function() {
-                         $cur.eq(0).appendTo($("#feed .hub-list"));
+                         $cur.eq(0).appendTo($(targetElId + " .hub-list"));
                     });
                 });
             };
@@ -336,12 +353,7 @@ function (Collection, ListView, WallView) {
          * Initializes and kicks off the counters
          **/
         initFlipCounter: function () {
-            var fc = new FlipCounter({
-                network: "strategy-prod.fyre.co",
-                siteId: "340628",
-                articleIds: ["custom-1392076496202"],
-                targetEls: [".lrg-counter", ".sm-counter"],
-            });
+            var fc = new FlipCounter(this.config.ncomments);
         }
     };
     
