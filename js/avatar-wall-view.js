@@ -18,8 +18,12 @@ AvatarWallView.prototype.createContentView = function (content) {
     return new AvatarContentView({ content: content });
 };
 
+AvatarWallView.prototype._getWidth = function () {
+    return this._width || this._width = $('#carousel').width();
+};
+
 AvatarWallView.prototype._insert = function (contentView) {
-    var translateX = getRandomInt(0, this.$el.width())
+    var translateX = getRandomInt(0, $('#carousel').width())
     contentView.$el.css({
         'left': translateX+'px'
     });
