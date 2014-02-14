@@ -152,6 +152,11 @@ function (Collection, ListView, WallView) {
         feedInstance: null,
 
         /**
+         * Flag if this is the first cycle of the carousel
+         */
+        firstRun: true,
+
+        /**
          * Configuration
          **/
         config: {
@@ -243,7 +248,7 @@ function (Collection, ListView, WallView) {
                 if ($activeSlide.attr("data-next-slide") == "counter") {
                     $(".sm-counter-wrapper").hide();
                 }
-                else {
+                else if (!($activeSlide.attr("data-hide-counter") && self.firstRun)) {
                     $(".sm-counter-wrapper").show();   
                 }
 
@@ -261,6 +266,7 @@ function (Collection, ListView, WallView) {
             $carousel.on("slid.bs.carousel", function () {
                 if (self.config.reloadCycle > 0) {
                     if ((self.config.reloadCycle * self.totNumSlides) == ++self.slideCounter) {
+                        self.firstRun = false;
                         self.slideCounter = 0;
                         location.reload();
                     }
