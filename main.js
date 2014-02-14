@@ -1,9 +1,8 @@
 Livefyre.require([
     "streamhub-sdk/collection",
     "streamhub-sdk/content/views/content-list-view",
-    "streamhub-wall",
-    "base64"],
-function (Collection, ListView, WallView, base64) {
+    "streamhub-wall"],
+function (Collection, ListView, WallView) {
 
     /**
      * Small client wrapper around nComments endpoint
@@ -136,10 +135,22 @@ function (Collection, ListView, WallView, base64) {
          * Total number of slides
          */
         totNumSlides: 0,
+
         /*
          * Number of slides that have been seen
          */
         slideCounter: 0,
+        
+        /*
+         * Pointer to media wall
+         */
+        mediaWallInstance: null,
+
+        /*
+         * Pointer to list feed
+         */
+        feedInstance: null,
+
         /**
          * Configuration
          **/
@@ -157,7 +168,7 @@ function (Collection, ListView, WallView, base64) {
             mediaWall: {
                 network: "strategy-prod.fyre.co",
                 siteId: '340628',
-                articleId: 'custom-1392076496202'
+                articleId: 'custom-1389909647018'
             },
             listFeed: {
                 network: "strategy-prod.fyre.co",
@@ -178,6 +189,7 @@ function (Collection, ListView, WallView, base64) {
                 this[key] = value;
             }
         },
+
         /**
          * Kicks off the whole process
          */
@@ -216,6 +228,7 @@ function (Collection, ListView, WallView, base64) {
             this.initFeedScroller();
             this.initFlipCounter();
         },
+
         /**
          * Setup for the carousel
          **/
@@ -224,14 +237,25 @@ function (Collection, ListView, WallView, base64) {
             var self = this;
 
             $carousel.on("slide.bs.carousel", function () {
-                window.active = $activeSlide = $carousel.find(".active");
+                $activeSlide = $carousel.find(".active");
 
+                /* smoke and mirrors for the small counter*/
                 if ($activeSlide.attr("data-next-slide") == "counter") {
                     $(".sm-counter-wrapper").hide();
                 }
                 else {
                     $(".sm-counter-wrapper").show();   
                 }
+
+                /* pause and resume the media wall*/
+                if ($activeSlide.attr("data-next-slide") == "media-wall") {
+                    self.mediaWallInstance.pause();
+                }
+
+                if ($activeSlide.find("#wall").length > 0) {
+                    self.mediaWallInstance.resume();
+                }
+
             });
 
             $carousel.on("slid.bs.carousel", function () {
@@ -248,40 +272,45 @@ function (Collection, ListView, WallView, base64) {
                 pause: ""
             });
         },
+
         /**
          * Initializes the collection and pipes them into the appropriate
          * views.
          **/
         initCollections: function() {
-            var collection1 = new Collection(this.config.mediaWall);
-
             var wallView = new WallView({
                 columns: 4,
                 el: document.getElementById("wall"),
             });
 
-            var archive = collection1.createArchive();
-            var updater = collection1.createUpdater();
-            archive.on("error", function () {
-              if (console && typeof console.log === "function") {
-                console.log("archive error", arguments);
-              }
-            });
-            updater.on("error", function () {
-              if (console && typeof console.log === "function") {
-                console.log("updater error", arguments);
-              }
-            });
-            updater.pipe(wallView);
-            archive.pipe(wallView.more);
+            var collection1 = new Collection(this.config.mediaWall);
+            this.mediaWallInstance = collection1;
+            collection1.pipe(wallView);
+
+            // var archive = collection1.createArchive();
+            // var updater = collection1.createUpdater();
+            // archive.on("error", function () {
+            //   if (console && typeof console.log === "function") {
+            //     console.log("archive error", arguments);
+            //   }
+            // });
+            // updater.on("error", function () {
+            //   if (console && typeof console.log === "function") {
+            //     console.log("updater error", arguments);
+            //   }
+            // });
+            // updater.pipe(wallView);
+            // archive.pipe(wallView.more);
 
             var listView = new ListView({
                 el: document.getElementById("feed")
             });
 
             var collection2 = new Collection(this.config.listFeed);
+            this.feedInstance = collection2;
             collection2.pipe(listView);
         },
+
         /**
          * Does the fading in and out of the list feed
          **/
@@ -297,6 +326,9 @@ function (Collection, ListView, WallView, base64) {
             setInterval(fn, this.config.feedScrollerInterval);
         },
 
+        /**
+         * Initializes and kicks off the counters
+         **/
         initFlipCounter: function () {
             var fc = new FlipCounter({
                 network: "strategy-prod.fyre.co",
