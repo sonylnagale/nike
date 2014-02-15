@@ -3,6 +3,9 @@
 
 <body>
 <div id="graphMain">
+	<div id="twitterBird">
+		<img src="img/graph_twitter_bird.png" />
+	</div>
 	<div id="graph"></div>
 </div>
 <script src="//cdn.jsdelivr.net/d3js/3.4.1/d3.min.js"></script>
@@ -60,18 +63,18 @@ var chartBody = svg.append("g")
   .attr("transform", "translate(0," + margin.top + ")");
 
 var graphclip = svg.append("defs").append("svg:clipPath")
-.attr("id", "graphclip")
-.append("svg:rect")
-	.attr("id", "clip-rect")
-	.attr("x", "0")
-	.attr("y", "0")
-	.attr("width", width-260)
-	.attr("height", height);
+	.attr("id", "graphclip")
+	.append("svg:rect")
+		.attr("id", "clip-rect")
+		.attr("x", "0")
+		.attr("y", "0")
+		.attr("width", width-260)
+		.attr("height", height);
 
 var graphBody = svg.append("g")
-.attr("clip-path", "url(#graphclip)")
-.attr("transform", "translate(0," + margin.top + ")")
-.attr("width",width)
+	.attr("clip-path", "url(#graphclip)")
+	.attr("transform", "translate(0," + margin.top + ")")
+	.attr("width",width)
 
 
 
@@ -133,8 +136,6 @@ var color = d3.scale.category10();
   	    .orient("right")
   	    .ticks(3)
 
-  
-         			
 	if (count == 1) {
 
 
@@ -153,7 +154,7 @@ var color = d3.scale.category10();
 		  .attr("y", 6)
 		  .attr("x",-30)
 		 // .attr("dy", ".71em")
-		  .style("text-anchor", "end")
+		  //.style("text-anchor", "end")
 		  //.text("Tweets");
 		
 		var line = d3.svg.line()
@@ -170,6 +171,7 @@ var color = d3.scale.category10();
 	  city.append("path")
 	  	//.data(cities)
 	      .attr("class", "line")
+	      .attr("id", "graphLine")
 	      //.attr("d", function(d) { return line(d.values); })
 	     //.attr("d",LF.line)
 	      .style("stroke", "#fd5502");
@@ -206,18 +208,41 @@ svg.select(".y.axis").transition()
 	.call(LF.yAxis);
 
 graphBody.selectAll("path.line")
-		.data(cities) // set the new data
-		.attr("transform", "translate(" + LF.x(0) + ")") // set the transform to the right by x(1) pixels (6 for the scale we've set) to hide the new value
-	    //.attr("d", LF.line)
-  	    .attr("d", function(d) { return LF.line(d.values); })
-		//.interrupt()
-		.transition() // start a transition to bring the new value into view
-			.ease("linear")
-			.duration(10000) // for this demo we want a continual slide so set this to the same as the setInterval amount below
-			.attr("transform", "translate(" + LF.x(-1) + ")"); // animate a slide to the left back to x(0) pixels to reveal the new value
+	.data(cities) // set the new data
+	.attr("transform", "translate(" + LF.x(0) + ")") // set the transform to the right by x(1) pixels (6 for the scale we've set) to hide the new value
+    //.attr("d", LF.line)
+ 	.attr("d", function(d) { return LF.line(d.values); })
+	//.interrupt()
+	.transition() // start a transition to bring the new value into view
+		.ease("linear")
+		.duration(10000) // for this demo we want a continual slide so set this to the same as the setInterval amount below
+		.attr("transform", "translate(" + LF.x(-1) + ")"); // animate a slide to the left back to x(0) pixels to reveal the new value
+	
+console.log(LF.y(data[data.length-3]["#snow"]));		
+		
+$("#twitterBird").animate({
+	//top: findYatX(1, document.getElementById("graphLine"))[1],
+	top: LF.y(data[data.length-3]["#snow"] + margin.top) ,
+	easing: "linear"
+}, 10000, function() {
+	// complete handler
+});
 
+console.log(findYatX(10, document.getElementById("graphLine")));
 
 };
+
+//Get the coordinates
+function findYatX(x, line) {
+     function getXY(len) {
+          var point = line.getPointAtLength(len);
+          return [point.x, point.y];
+     }
+     var curlen = 0;
+     while (getXY(curlen)[0] < x) { curlen += 0.01; }
+     return getXY(curlen);
+}
+
 var opts = {
 	initialFrom: "-5min",
 	initialUntil: "-30s",

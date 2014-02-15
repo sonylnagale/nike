@@ -69,3 +69,11 @@ body {
 .domain {
 	display:none;
 }
+
+#twitterBird {
+	width:38px;
+	height:31px;
+	position:relative;
+	left: 1550px;
+	top:500px;
+}
