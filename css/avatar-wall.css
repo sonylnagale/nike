@@ -14,7 +14,7 @@
 }
 
 .nike-avatar-wall-foreground {
-    z-index: 2;
+    z-index: 9999;
 }
 .hub-list article.content.nike-avatar-wall-fall {
     -webkit-transform: translate3d(0px, 1800px, 0px);
