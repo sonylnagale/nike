@@ -155,6 +155,10 @@ function (Collection, ListView, WallView) {
                     $carousel.removeClass('nike-kd-bg');
                 }
 
+                if ($activeSlide.hasClass('nike-map') && NIKE_AVATAR_WALL_INTERVAL_ID) {
+                    clearInterval(NIKE_AVATAR_WALL_INTERVAL_ID);
+                }
+
                 if (self.config.reloadCycle > 0) {
                     if ((self.config.reloadCycle * self.totNumSlides) == ++self.slideCounter) {
                         self.firstRun = false;
