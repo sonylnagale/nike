@@ -1,7 +1,23 @@
 @import url(http://fonts.googleapis.com/css?family=Open+Sans+Condensed:700);
 
+
+@font-face
+{
+	font-family: TradeCaps;
+	src: url(../fonts/tradegothic/TradeGothicLTStd-BdCn20.otf);
+	font-weight: normal;
+}
+
+@font-face
+{
+	font-family: TradeCopy;
+	src: url(../fonts/tradegothic/TradeGothicLTStd.otf);
+	font-weight: normal;
+}
+
+
 body {
-	font-family: "Open Sans Condensed", sans-serif;
+	font-family: "TradeCaps", sans-serif;
 	margin:0;
 	padding:0;
 }
@@ -25,13 +41,18 @@ body {
 
 .line {
   fill: none;
-  stroke: #fd641a;
+  stroke: #fd5300;
   stroke-width: 13px;
-  color: #fd5502;
+  color: #fd5300;
 }
 .tick {
 	stroke: #eee;
 	stroke-width:0.5px;
+}
+
+.tick text {
+	font-size: 30px;
+	font-weight: strong;
 }
 #graph {
 	width: 1920px;
@@ -43,3 +64,8 @@ body {
 
 .legend text {
 	font-size: 14px;
+}
+
+.domain {
+	display:none;
+}
