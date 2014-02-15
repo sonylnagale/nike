@@ -1,4 +1,3 @@
-var $ = Livefyre.require('streamhub-sdk/jquery');
 var CollectionMapView = Livefyre.require('streamhub-map/views/collection-map-view');
 var StateToContent = Livefyre.require('streamhub-sdk/content/state-to-content');
 var MarkerTemplate = Livefyre.require('hgn!streamhub-map/views/templates/marker');
@@ -9,8 +8,13 @@ var NikeCollectionMapView = function (opts) {
 
     this._collectionToMarker = {};
     this._shiftDistance = opts.shiftDistance || 50;
+    this._fitBounds = opts.fitBounds;
 
-    $('body').on('counterTick.nike', function () {
+    if (this._fitBounds) {
+        this._map.fitBounds(this._fitBounds);
+    }
+
+    $('body').on('increment.counter', function () {
         var colIds = Object.keys(this._collectionToMarker);
         var markerToNotify = this._collectionToMarker[colIds[NikeCollectionMapView.getRandom(0, colIds.length-1)]];
         this.notifyMarker(markerToNotify);

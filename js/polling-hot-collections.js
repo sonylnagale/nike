@@ -1,6 +1,5 @@
 var HotCollections = Livefyre.require('streamhub-hot-collections/streams/hot-collections');
 var HotCollectionToCollection = Livefyre.require('streamhub-hot-collections/streams/hot-collection-to-collection');
-var $ = Livefyre.require('streamhub-sdk/jquery');
 var inherits = Livefyre.require('inherits');
 
 var PollingHotCollections = function (opts) {

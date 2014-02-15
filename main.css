@@ -13,6 +13,9 @@ body {
     height: 1080px;
     margin: 0 auto;
 }
+#carousel.nike-kd-bg {
+    background: url('imgs/kdauntpearl.png') no-repeat left 225px;
+}
 .item {
     max-height: 1080px;
     max-width: 1920px;
@@ -29,11 +32,6 @@ body {
     padding: 40px;
     text-align: center;
     width: 100%;
-}
-
-.feed-container,
-.wall-container {
-    background: url('imgs/kdauntpearl.png') no-repeat left 225px;
 }
 
 .wall-container:after{
@@ -96,6 +94,9 @@ body {
 /**
  * WALL VIEW
  **/
+#wall {
+    margin-top: 85px;
+}
 #wall .hub-list {
     text-align: center;
 }
@@ -155,7 +156,7 @@ body {
     margin: 16px 0px 0px 0px;
     font-size: 14px;
 }
-#wall .content .content-created-at:before{
+#wall .content-twitter .content-created-at:before{
     content: "";
     background: no-repeat left top url('imgs/smalltwitterbird.png');
     height: 13px;
@@ -185,7 +186,7 @@ body {
 }
 #wall .content-with-image .content-body,
 #wall .hub-content-image-loading .content-body {
-    margin: 80px 0px 20px 0px;
+    margin: 90px 0px 20px 0px;
 }
 #wall .content-with-image .content-attachments,
 #wall .hub-content-image-loading .content-attachments {
