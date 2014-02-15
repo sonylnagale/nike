@@ -30,10 +30,10 @@
         <div id="carousel" class="carousel slide">
             <!-- Slides -->
             <div class="carousel-inner">
-                <div class="item" data-hide-counter="first-run">
+                <div class="item active" data-next-slide="avatar-wall" data-hide-counter="first-run">
                     <div class="slate shoe">
                         <div class="slate-content static">
-                            <img  class="bigshoe animated3 fadeInUp" src="imgs/shoe.png" alt="" />
+                            <img class="bigshoe animated3 fadeInUp" src="imgs/shoe.png" alt="" />
                             <p class="subtitle animated18 fadeInDown">Introducing the kd VI</p>
                             <p class="title animated8 fadeInDown"><span>AUNT PEARL</span></p>
                         </div>
@@ -79,21 +79,26 @@
                             <img class="counter-tag-text" src="imgs/Total_tweets_and_counting.png" />
                         </div>
                     </div>
-                    <link rel="stylesheet" href="/css/avatar-wall.css" />
                 </div>
-                <div class="item">
+                <div class="item nike-kd-bg">
                     <div class="wall-container">
                         <div id="wall"></div>
                     </div>
                 </div>
-                <div class="item active">
+                <div class="item nike-kd-bg">
                     <div class="feed-container">
                         <div id="feed1"></div>
                     </div>
                 </div>
-                <div class="item">
+                <div class="item" data-next-slide="nike-map">
                     <div class="feed-container">
                         <div id="feed2"></div>
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="slate" style="width: 1920px">
+                        <div id="nike-map"></div>
+                        <link rel="stylesheet" href="css/map.css" />
                     </div>
                 </div>
             </div>
@@ -116,5 +121,13 @@
         <script type="text/javascript" src="js/avatar-content-view.js"></script>
         <script type="text/javascript" src="js/avatar-wall-view.js"></script>
         <script type="text/javascript" src="js/counter-wall.js"></script>
+
+        <!-- map scripts -->
+        <script src="http://d3js.org/d3.v3.min.js"></script>
+        <script src="http://cdn.livefyre.com/libs/apps/cheung31/streamhub-map/v1.0.2-build.40/streamhub-map.min.js"></script>
+        <script type="text/javascript" src="js/countries.js"></script>
+        <script type="text/javascript" src="js/nike-collection-map-view.js"></script>
+        <script type="text/javascript" src="js/polling-hot-collections.js"></script>
+        <script type="text/javascript" src="js/map.js"></script>
     </body>
 </html>

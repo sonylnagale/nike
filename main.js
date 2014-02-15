@@ -119,7 +119,7 @@ function (Collection, ListView, WallView) {
          * Setup for the carousel
          **/
         initCarousel: function() {
-            var $carousel = $(".carousel");
+            var $carousel = window.$carousel = $(".carousel");
             var self = this;
 
             $carousel.on("slide.bs.carousel", function () {
@@ -138,6 +138,10 @@ function (Collection, ListView, WallView) {
                     self.mediaWallInstance.pause();
                 }
 
+                if ($activeSlide.attr("data-next-slide") == "avatar-wall") {
+                    initAvatarWall(); //global
+                }
+
                 if ($activeSlide.find("#wall").length > 0) {
                     self.mediaWallInstance.resume();
                 }
@@ -145,12 +149,22 @@ function (Collection, ListView, WallView) {
             });
 
             $carousel.on("slid.bs.carousel", function () {
+                if ($activeSlide.hasClass('nike-kd-bg')) {
+                    $carousel.addClass('nike-kd-bg');
+                } else {
+                    $carousel.removeClass('nike-kd-bg');
+                }
+
                 if (self.config.reloadCycle > 0) {
                     if ((self.config.reloadCycle * self.totNumSlides) == ++self.slideCounter) {
                         self.firstRun = false;
                         self.slideCounter = 0;
                         location.reload();
                     }
+                }
+
+                if ($activeSlide.attr("data-next-slide") == "nike-map") {
+                    initMap(); //global
                 }
             });
 
