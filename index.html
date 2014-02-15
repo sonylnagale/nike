@@ -18,18 +18,19 @@
         <link rel="stylesheet" href="fonts/tradegothic/trade.css" />
         <link rel="stylesheet" href="main.css" />
 
-        <!-- Flip Clock -->
+        <!-- Comment-Counts & Flip Clock -->
         <script src="libs/FlipClock/compiled/flipclock.js"></script>
         <link rel="stylesheet" href="libs/FlipClock/compiled/flipclock.css" />
-        <!-- End Flip Clock -->
-
         <script src="libs/Base64.min.js"></script>
+        <script src="js/lf-comment-counts.js"></script>
+        <script src="js/lf-flip-counter.js"></script>
+        <!-- End Comment-Counts & Flip Clock -->
     </head>
     <body>
         <div id="carousel" class="carousel slide">
             <!-- Slides -->
             <div class="carousel-inner">
-                <div class="item active" data-hide-counter="first-run">
+                <div class="item" data-hide-counter="first-run">
                     <div class="slate shoe">
                         <div class="slate-content static">
                             <img  class="bigshoe animated3 fadeInUp" src="imgs/shoe.png" alt="" />
@@ -85,7 +86,7 @@
                         <div id="wall"></div>
                     </div>
                 </div>
-                <div class="item">
+                <div class="item active">
                     <div class="feed-container">
                         <div id="feed1"></div>
                     </div>
