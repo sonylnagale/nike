@@ -65,7 +65,7 @@ var graphclip = svg.append("defs").append("svg:clipPath")
 	.attr("id", "clip-rect")
 	.attr("x", "0")
 	.attr("y", "0")
-	.attr("width", width-150)
+	.attr("width", width-260)
 	.attr("height", height);
 
 var graphBody = svg.append("g")
@@ -198,7 +198,7 @@ LF.line = d3.svg.line()
 		// return the Y coordinate where we want to plot this datapoint
 		return LF.y(d.tweets); 
 	})
-	.interpolate('linear');
+	.interpolate('monotone');
 
 svg.select(".y.axis").transition()
 	.duration(axisDuration)
@@ -219,7 +219,7 @@ graphBody.selectAll("path.line")
 
 };
 var opts = {
-	initialFrom: "-2min",
+	initialFrom: "-5min",
 	initialUntil: "-30s",
 	subsequentFrom: "-30s",
 	subsequentUntil: "-20s",
