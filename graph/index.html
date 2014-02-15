@@ -5,9 +5,10 @@
 <div id="graphMain">
 	<div id="graph"></div>
 </div>
-
-<script src="http://d3js.org/d3.v3.js"></script>
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" charset="utf-8"></script>
+<script src="//cdn.jsdelivr.net/d3js/3.4.1/d3.min.js"></script>
+<!-- <script src="http://d3js.org/d3.v3.js"></script>-->
+ <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" charset="utf-8"></script>
+ 
 
 <script src="src/lftrends.js"></script>
 <link rel="stylesheet" href="css/styles.css" type="text/css" />
@@ -37,11 +38,12 @@ var margin = {top: 20, right: 80, bottom: 30, left: 50},
     height = HEIGHT - margin.top - margin.bottom,
 	padding = 0;
 
+var axisDuration = 1000;
 var parseDate = d3.time.format.utc("%H:%M:%S %p").parse;
 
 var svg = d3.select("#graph").append("svg")
-    .attr("width", width)
-    .attr("height", height)
+    .attr("width", WIDTH)
+    .attr("height", HEIGHT)
 
 var clip = svg.append("defs").append("svg:clipPath")
 	.attr("id", "clip")
@@ -55,7 +57,7 @@ var clip = svg.append("defs").append("svg:clipPath")
 
 var chartBody = svg.append("g")
 	.attr("clip-path", "url(#clip)")
-  .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+  .attr("transform", "translate(0," + margin.top + ")");
 
 var graphclip = svg.append("defs").append("svg:clipPath")
 .attr("id", "graphclip")
@@ -68,14 +70,8 @@ var graphclip = svg.append("defs").append("svg:clipPath")
 
 var graphBody = svg.append("g")
 .attr("clip-path", "url(#graphclip)")
-.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-
-
-var rect = chartBody.append('svg:rect')
-	.attr('width', width)
-	.attr('height', height)
-	.attr('fill', 'none');
+.attr("transform", "translate(0," + margin.top + ")")
+.attr("width",width)
 
 
 
@@ -96,11 +92,7 @@ var color = d3.scale.category10();
 	               			
  color.domain(d3.keys(data[0]).filter(function(key) { return key !== "date"; }));
 
-// use this to parse date
- /*  data.forEach(function(d) {
-    d.date = d.date;
-  });
- */
+
   var cities = color.domain().map(function(name) {
     return {
       name: name,
@@ -109,110 +101,66 @@ var color = d3.scale.category10();
       })
     };
   });
+  
  
  
- var x = d3.time.scale()
-	.range([0, width])
-	.domain([12,0])
- 	//.domain(d3.extent(data, function(d) { return new Date(new Date().getTime() - d.date.getTime()) ; }));
-	//.domain(d3.extent(data, function(d,i) { return d.date;  }));
+ var x = d3.scale.ordinal()
+ .domain(["-240s","-210s","-180s","-150s","-120s","-90s", "-60s", "-30s", ""])
+ .rangePoints([0, width]);
+
  var y = d3.scale.linear()
  .range([height, 0]);
 
 
   y.domain([
-/*     d3.min(cities, function(c) { return d3.min(c.values, function(v) { console.log('min',v.tweets);return v.tweets; }); }),
-    d3.max(cities, function(c) { return d3.max(c.values, function(v) { console.log('max',v.tweets);return v.tweets; }); })
- */
  	0,
  	maxValue(cities)
  ]);	
 
   var newest = cities[0].values[cities[0].values.length-1].date;
 
-  var xAxis = d3.svg.axis()
-  	.scale(x)
-	.tickFormat(function(d,i) { /*console.log(data.length,i)*/;return -i + '0s';})
- .orient("bottom");
-
-var yAxis = d3.svg.axis()
-  .scale(LF.y)
-  .orient("left");
   
+  var xAxis = d3.svg.axis()
+	  	.scale(x)
+	  	.orient('bottom')
+	 	.tickPadding(10)
+	    .ticks(9)
+
   LF.y = d3.scale.linear().domain([ 0, maxValue(cities) + 10]).range([height-padding,0]);
+  
   LF.yAxis = d3.svg.axis()
       	.scale(LF.y)
-  	    .orient("left")
-  	    .ticks(10)
-      	.tickSize(0-width)
-  		.tickFormat(d3.format("d"))
-  	    .tickPadding(8);
+  	    .orient("right")
+  	    .ticks(3)
 
   
          			
 	if (count == 1) {
 
-		var axis = chartBody.append("g")
-		  .attr("class", "x axis")
-		  .attr("transform", "translate(0,350)")
-		  .call(xAxis);
 
+		var axis = svg.append("g")
+		  	.attr("class", "x axis")
+         	.attr("transform", "translate(0, " + height + ")")
+		  	.call(xAxis);
 
-		chartBody.append("g")
+		svg.append("g")
 		  .attr("class", "y axis")
+		  .attr("transform", "translate("+ width+",0)")
+
 		  .call(LF.yAxis)
 		.append("text")
 		  .attr("transform", "rotate(-90)")
 		  .attr("y", 6)
 		  .attr("x",-30)
-		  .attr("dy", ".71em")
+		 // .attr("dy", ".71em")
 		  .style("text-anchor", "end")
-		  .text("Tweets");
+		  //.text("Tweets");
 		
 		var line = d3.svg.line()
-		    .interpolate("monotone")
+		    .interpolate("linear")
 		    .x(function(d) { return x(d.date); })
 		    .y(function(d) { return y(d.tweets); });
 
-		// add legend   
-		var legend = svg.append("g")
-		  .attr("class", "legend")
-	        //.attr("x", w - 65)
-	        //.attr("y", 50)
-		  .attr("height", 100)
-		  .attr("width", 100)
-	    .attr('transform', 'translate(20,50)')    
-	      
-	    
-	    legend.selectAll('rect')
-	      .data(cities)
-	      .enter()
-		      .append("circle")
-		      .attr('class','legend')
-			  .attr("cx", width - 105)
-		      .attr("cy", function(d, i){ return i *  20;})
-			  .attr("r", 5)
-			  .style("fill", function(d,i) { 
-				  return color(d.name);
-		      })
-		  .on('click',function(d,i) {
-			  console.log('clicked', d, i);	
-		  });
-	      
-	    legend.selectAll('text')
-	      .data(cities)
-	      .enter()
-		      .append("text")
-			  .attr("x", width - 92)
-		      .attr("y", function(d, i){ return i *  20 + 4;})
-			  .text(function(d) {
-		        var text = d.name;
-		        return text;
-		      })
-		  .on('click',function(d,i) {
-			  //console.log('clicked', d, i);	
-		  });
-		
 		
 	  var city = graphBody.selectAll(".city")
 	      .data(cities)
@@ -227,12 +175,7 @@ var yAxis = d3.svg.axis()
 	      .style("stroke", "#fd5502");
 	
 	  
-	 /*  city.append("text")
-	      .datum(function(d) { return {name: d.name, value: d.values[d.values.length - 1]}; })
-	      .attr("transform", function(d) { return "translate(" + x(d.value.date) + "," + y(d.value.tweets) + ")"; })
-	      .attr("x", 3)
-	      .attr("dy", ".35em")
-	      .text(function(d) { return d.name; }); */
+	
 	} // if first run  
   
 ////////////
@@ -255,62 +198,44 @@ LF.line = d3.svg.line()
 		// return the Y coordinate where we want to plot this datapoint
 		return LF.y(d.tweets); 
 	})
-	.interpolate('monotone');
+	.interpolate('linear');
+
+svg.select(".y.axis").transition()
+	.duration(axisDuration)
+	.ease("linear")
+	.call(LF.yAxis);
 
 graphBody.selectAll("path.line")
 		.data(cities) // set the new data
-		.attr("transform", "translate(" + LF.x(1) + ")") // set the transform to the right by x(1) pixels (6 for the scale we've set) to hide the new value
+		.attr("transform", "translate(" + LF.x(0) + ")") // set the transform to the right by x(1) pixels (6 for the scale we've set) to hide the new value
 	    //.attr("d", LF.line)
   	    .attr("d", function(d) { return LF.line(d.values); })
-
+		//.interrupt()
 		.transition() // start a transition to bring the new value into view
 			.ease("linear")
-			.duration(30000) // for this demo we want a continual slide so set this to the same as the setInterval amount below
-			.attr("transform", "translate(" + LF.x(0) + ")"); // animate a slide to the left back to x(0) pixels to reveal the new value
-		
-			
-			///////////////
+			.duration(10000) // for this demo we want a continual slide so set this to the same as the setInterval amount below
+			.attr("transform", "translate(" + LF.x(-1) + ")"); // animate a slide to the left back to x(0) pixels to reveal the new value
 
-// update axes
 
-//x.domain([ parseDate(data[0].x), parseDate(newValDate)])
-chartBody.select('y axis').call(yAxis);
-/*  var x = d3.time.scale()
-	.range([0, width])
- 	.domain(d3.extent(data, function(d) { return new Date(+d.date+30000); }));
-chartBody.select('x axis')
-	.transition()
-	.duration(30000)
-	.ease('linear')
-	.call(xAxis);
-
- */
-/* x.domain([new Date(x.domain()[2]), new Date(x.domain()[x.domain().length] - 30000)]);
-    var t = svg.transition().duration(30000).ease('linear');
-    t.select(".x.axis").call(xAxis);
- */
-//});
 };
 var opts = {
+	initialFrom: "-2min",
+	initialUntil: "-30s",
+	subsequentFrom: "-30s",
+	subsequentUntil: "-20s",
+	interval: 10000,
 
-		
-		initialFrom: "-2min",
-		initialUntil: "-30s",
-		subsequentFrom: "-30s",
-		subsequentUntil: "-20s",
-		interval: 30000,
+	// UAT
+	rules: {
 
-		// UAT
-		rules: {
-
-			"sn-1389060542588": {
-				name: "#snow",
-				site: "303990",
-				articleId: "sn-1389060542588",
-				rule: "2"
-			}
-
+		"sn-1389060542588": {
+			name: "#snow",
+			site: "303990",
+			articleId: "sn-1389060542588",
+			rule: "2"
 		}
+
+	}
 };
 var trends = new lftrends(opts);
 </script>
