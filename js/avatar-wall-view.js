@@ -42,8 +42,8 @@ AvatarWallView.prototype._insert = function (contentView) {
     }
     contentView.$el.addClass(wallClass);
 
-    setTimeout(function () {
-        setInterval(function () {
+    var timeoutId = setTimeout(function () {
+        NIKE_AVATAR_WALL_INTERVAL_ID = setInterval(function () {
             contentView.$el.removeClass('nike-avatar-wall-fall');
             setTimeout(function () {
                 contentView.$el.addClass('nike-avatar-wall-fall');
@@ -55,3 +55,5 @@ AvatarWallView.prototype._insert = function (contentView) {
 function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
+
+NIKE_AVATAR_WALL_INTERVAL_ID;

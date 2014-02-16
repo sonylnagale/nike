@@ -5,22 +5,30 @@ function initMap() {
     }
     var MockHotCollectionsStream = Livefyre.require('streamhub-hot-collections-tests/mocks/streams/mock-hot-collections');
 
-    var sfLatLon = { lat: 37.7749295, lon: -122.4194155 };
-    var usaLatLon = { lat: 37.09024, lon: -95.712891 };
-    var europeLatLon = { lat: 54.5259614, lon: 15.2551187 };
-    var southAmericaLatLon = { lat: -8.783195, lon: -55.491477 };
-    var indiaLatLon = { lat: 20.593684, lon: 78.96288 };
-    var indonesiaLatLon = { lat: -0.789275, lon: 113.921327 };
+    var mexicoCity = { lat: 19.432607699202634, lon: -99.13320800056681 };
+    var newYorkCity = { lat: 40.71591415543329, lon: -74.00597310159355 };
+    var losAngeles = { lat: 34.05450978601848, lon: -118.2423116080463 };
+    var toronto = { lat: 34.05450978601848, lon: -118.2423116080463 };
+    var chicago = { lat: 41.87557725401747, lon: -87.68661811540369 };
+    var houston = { lat: 29.760192698840356, lon: -95.36938959849067 };
+    var montreal = { lat: 45.50530138500939, lon: -73.55399249936454 };
+    var guadalajara = { lat: 20.665481091681226, lon: -103.34960919746663 };
+    var minneapolis = { lat: 44.98187696104041, lon: -93.27147652104031 };
+    var portland = { lat: 45.520083870183896, lon:  -122.67620709899347 };
 
     // Collection to Location Mapping
     //TODO(ryanc): collectionId -> lat/lon or articleId -> lat/lon
     var collectionToLocation = {
-        60969431: sfLatLon,
-        58265981: usaLatLon,
-        58201034: europeLatLon,
-        58366495: southAmericaLatLon,
-        46862364: indiaLatLon,
-        48214966: indonesiaLatLon
+        60969431: newYorkCity,
+        58265981: mexicoCity,
+        58201034: losAngeles,
+        58366495: toronto,
+        46862364: chicago,
+        48214966: houston,
+        58202936: montreal,
+        59096076: guadalajara,
+        46988018: minneapolis,
+        47080599: portland
     };
 
     var mapView = window.mapView = new NikeCollectionMapView({
@@ -45,10 +53,6 @@ function initMap() {
     });
 
     hotCollectionsStream.pipe(mapView);
-
-    setInterval(function () {
-        $('body').trigger('increment.counter');
-    }, 750);
 
     NIKE_MAP_INIT = true;
 }

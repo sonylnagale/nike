@@ -79,6 +79,9 @@
     height: 75px;
     background-size: cover;
     border: none;
+    -webkit-border-radius: 75px;
+    -moz-border-radius: 75px;
+    border-radius: 75px;
 }
 #avatar-wall .nike-avatar-wall-background .content-author-avatar {
     width: 40px;
