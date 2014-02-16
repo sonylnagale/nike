@@ -6,6 +6,8 @@ var AvatarWallView = function (opts) {
     this._layers = opts.layers || 5;
     this._falling = false;
 
+    this._intervalIds = [];
+
     ContentListView.call(this, opts);
 };
 inherits(AvatarWallView, ContentListView);
@@ -42,18 +44,35 @@ AvatarWallView.prototype._insert = function (contentView) {
     }
     contentView.$el.addClass(wallClass);
 
-    var timeoutId = setTimeout(function () {
-        NIKE_AVATAR_WALL_INTERVAL_ID = setInterval(function () {
+    setTimeout(function () {
+        this._intervalIds.push(setInterval(function () {
             contentView.$el.removeClass('nike-avatar-wall-fall');
             setTimeout(function () {
                 contentView.$el.addClass('nike-avatar-wall-fall');
             }, 500);
-        }, 5000);
-    }, getRandomInt(500, 5000));
+        }, 5000));
+    }.bind(this), getRandomInt(500, 5000));
+};
+
+AvatarWallView.prototype.restartLoop = function () {
+    for (var i=0; i < this._intervalIds.length; i++) {
+        clearInterval(this._intervalIds[i]);
+    }
+
+    for (var i=0; i < this.views; i++) {
+        var contentView = this.views[i];
+        setTimeout(function () {
+            this._intervalIds.push(setInterval(function () {
+                contentView.$el.removeClass('nike-avatar-wall-fall');
+                setTimeout(function () {
+                    contentView.$el.addClass('nike-avatar-wall-fall');
+                }, 500);
+            }, 5000));
+        }.bind(this), getRandomInt(500, 5000));
+    }
 };
 
 function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1) + min);
 }
 
-NIKE_AVATAR_WALL_INTERVAL_ID;

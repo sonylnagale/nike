@@ -1,11 +1,12 @@
+var Collection = Livefyre.require('streamhub-sdk/collection');
+
 AVATAR_WALL_INIT = false;
 function initAvatarWall() {
     if (AVATAR_WALL_INIT) {
         return;
     }
-    var Collection = Livefyre.require('streamhub-sdk/collection');
 
-    var view = window.view = new AvatarWallView({
+    var view = window.avatarWallView = new AvatarWallView({
         el: document.getElementById('avatar-wall')
     });
 
@@ -21,3 +22,8 @@ function initAvatarWall() {
 
     AVATAR_WALL_INIT = true;
 }
+
+function destroyAvatarWall() {
+    window.avatarWallView.restartLoop();
+    AVATAR_WALL_INIT = false;
+};

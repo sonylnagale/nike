@@ -139,13 +139,14 @@ function (Collection, ListView, WallView) {
                     $(".sm-counter-wrapper").show();   
                 }
 
-                /* pause and resume the media wall*/
-                if ($activeSlide.attr("data-next-slide") == "media-wall") {
-                    self.mediaWallInstance.pause();
-                }
-
                 if ($activeSlide.attr("data-next-slide") == "avatar-wall") {
                     initAvatarWall(); //global
+                }
+
+                /* pause and resume the media wall*/
+                if ($activeSlide.attr("data-next-slide") == "media-wall") {
+                    destroyAvatarWall(); //global
+                    self.mediaWallInstance.pause();
                 }
 
                 if ($activeSlide.find("#wall").length > 0) {
@@ -153,17 +154,13 @@ function (Collection, ListView, WallView) {
                 }
 
                 if ($activeSlide.attr("data-next-slide") == "nike-map") {
-                    setTimeout(function () { debugger; initMap(); }, 500); //global
+                    setTimeout(function () { initMap(); }, 500); //global
                 }
 
             });
 
             $carousel.on("slid.bs.carousel", function () {
                 $activeSlide = $carousel.find(".active");
-
-                if ($activeSlide.hasClass('nike-map') && NIKE_AVATAR_WALL_INTERVAL_ID) {
-                    clearInterval(NIKE_AVATAR_WALL_INTERVAL_ID);
-                }
 
                 if (self.config.reloadCycle > 0) {
                     if ((self.config.reloadCycle * self.totNumSlides) == ++self.slideCounter) {
