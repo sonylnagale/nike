@@ -46,9 +46,5 @@ function initMap() {
 
     hotCollectionsStream.pipe(mapView);
 
-    setInterval(function () {
-        $('body').trigger('increment.counter');
-    }, 750);
-
     NIKE_MAP_INIT = true;
 }

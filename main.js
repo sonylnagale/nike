@@ -125,6 +125,12 @@ function (Collection, ListView, WallView) {
             $carousel.on("slide.bs.carousel", function () {
                 $activeSlide = $carousel.find(".active");
 
+                if ($activeSlide.hasClass('nike-kd-bg')) {
+                    $carousel.addClass('nike-kd-bg');
+                } else {
+                    $carousel.removeClass('nike-kd-bg');
+                }
+
                 /* smoke and mirrors for the small counter*/
                 if ($activeSlide.attr("data-next-slide") == "counter") {
                     $(".sm-counter-wrapper").hide();
@@ -149,11 +155,7 @@ function (Collection, ListView, WallView) {
             });
 
             $carousel.on("slid.bs.carousel", function () {
-                if ($activeSlide.hasClass('nike-kd-bg')) {
-                    $carousel.addClass('nike-kd-bg');
-                } else {
-                    $carousel.removeClass('nike-kd-bg');
-                }
+                $activeSlide = $carousel.find(".active");
 
                 if ($activeSlide.hasClass('nike-map') && NIKE_AVATAR_WALL_INTERVAL_ID) {
                     clearInterval(NIKE_AVATAR_WALL_INTERVAL_ID);
@@ -256,4 +258,8 @@ function (Collection, ListView, WallView) {
     };
     
     $(window).on('load', function () { Hub.init(); });
+
+    setInterval(function () {
+        $('body').trigger('increment.counter');
+    }, 750);
 }); 
