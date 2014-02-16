@@ -153,7 +153,7 @@ function (Collection, ListView, WallView) {
                 }
 
                 if ($activeSlide.attr("data-next-slide") == "nike-map") {
-                    initMap(); //global
+                    setTimeout(function () { debugger; initMap(); }, 500); //global
                 }
 
             });
