@@ -152,6 +152,10 @@ function (Collection, ListView, WallView) {
                     self.mediaWallInstance.resume();
                 }
 
+                if ($activeSlide.attr("data-next-slide") == "nike-map") {
+                    initMap(); //global
+                }
+
             });
 
             $carousel.on("slid.bs.carousel", function () {
@@ -167,10 +171,6 @@ function (Collection, ListView, WallView) {
                         self.slideCounter = 0;
                         location.reload();
                     }
-                }
-
-                if ($activeSlide.attr("data-next-slide") == "nike-map") {
-                    initMap(); //global
                 }
             });
 
