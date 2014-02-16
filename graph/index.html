@@ -3,9 +3,6 @@
 
 <body>
 <div id="graphMain">
-	<div id="twitterBird">
-		<img src="img/graph_twitter_bird.png" />
-	</div>
 	<div id="graph"></div>
 </div>
 <script src="//cdn.jsdelivr.net/d3js/3.4.1/d3.min.js"></script>
@@ -76,11 +73,22 @@ var graphBody = svg.append("g")
 	.attr("transform", "translate(0," + margin.top + ")")
 	.attr("width",width)
 
-
+var svgTransition = d3.select("#graph").transition();
 
 function draw(data, count) {
 	LF.data.shift();
 
+	// for a manual data add test
+	if (typeof data === 'number') {
+		data = [
+				{
+					'#snow': data,
+					'date': new Date()
+				}
+		];
+		
+	}
+	
 	data = LF.data.concat(data);
 		
 	LF.data = data;
@@ -120,7 +128,6 @@ var color = d3.scale.category10();
  	maxValue(cities)
  ]);	
 
-  var newest = cities[0].values[cities[0].values.length-1].date;
 
   
   var xAxis = d3.svg.axis()
@@ -202,46 +209,30 @@ LF.line = d3.svg.line()
 	})
 	.interpolate('monotone');
 
-svg.select(".y.axis").transition()
+/* svg.select(".y.axis").transition()
 	.duration(axisDuration)
 	.ease("linear")
 	.call(LF.yAxis);
+ */
+var t = svg.transition().duration(axisDuration);
+t.selectAll("path.line") 		
+	.attr("d", function(d) { return LF.line(d.values); })
 
 graphBody.selectAll("path.line")
 	.data(cities) // set the new data
 	.attr("transform", "translate(" + LF.x(0) + ")") // set the transform to the right by x(1) pixels (6 for the scale we've set) to hide the new value
-    //.attr("d", LF.line)
  	.attr("d", function(d) { return LF.line(d.values); })
-	//.interrupt()
+	
 	.transition() // start a transition to bring the new value into view
+	    .attr("transform", "translate(" + LF.x(0) + ")") // set the transform to the right by x(1) pixels (6 for the scale we've set) to hide the new value
+
+		.attr("d", function(d) { return LF.line(d.values); })
+		//.delay(1000)
 		.ease("linear")
 		.duration(10000) // for this demo we want a continual slide so set this to the same as the setInterval amount below
 		.attr("transform", "translate(" + LF.x(-1) + ")"); // animate a slide to the left back to x(0) pixels to reveal the new value
-	
-console.log(LF.y(data[data.length-3]["#snow"]));		
-		
-$("#twitterBird").animate({
-	//top: findYatX(1, document.getElementById("graphLine"))[1],
-	top: LF.y(data[data.length-3]["#snow"] + margin.top) ,
-	easing: "linear"
-}, 10000, function() {
-	// complete handler
-});
-
-console.log(findYatX(10, document.getElementById("graphLine")));
 
 };
-
-//Get the coordinates
-function findYatX(x, line) {
-     function getXY(len) {
-          var point = line.getPointAtLength(len);
-          return [point.x, point.y];
-     }
-     var curlen = 0;
-     while (getXY(curlen)[0] < x) { curlen += 0.01; }
-     return getXY(curlen);
-}
 
 var opts = {
 	initialFrom: "-5min",
