@@ -25,7 +25,6 @@ body {
 #graphMain {
 	width: 1920px;
 	height: 1080px;
-	padding-top: 150px;
 	background-image: url(../img/bg.jpg);
 	background-repeat: no-repeat;
 }
@@ -94,9 +93,7 @@ body {
 	line-height:36px;
 }
 
-.tick-0 text, .tick-1 text, .tick-2 text {
-	opacity: 0;
-}
+
 
 .tick-3 text {
 	opacity: .025;
@@ -163,6 +160,11 @@ body {
 }
 .tick-24 text {
 	opacity: 1;
+}
+
+.tick-0 text, .tick-1 text, .tick-2 text, .tick-3 text, .tick-4 text, .tick-6 text, .tick-7 text, .tick-9 text, .tick-10 text, 
+.tick-12 text, 	.tick-13 text, .tick-15 text, .tick-16 text, .tick-18 text, .tick-19 text, .tick-21 text, .tick-22 text {
+	opacity: 0;
 }
 
 .y.axis .tick line  {
