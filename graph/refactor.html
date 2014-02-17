@@ -24,7 +24,7 @@ function maxValue(arr) {
 }	
 
 
-var initialDataURL = "http://bootstrap.client-solutions-uat.fyre.co/api/v3.0/stats.collections.curate/MzAzOTkwOnNuLTEzODkwNjA1NDI1ODg7Mnw=.json?from=-5min&until=-40s",
+var initialDataURL = "http://bootstrap.client-solutions-uat.fyre.co/api/v3.0/stats.collections.curate/MzAzOTkwOnNuLTEzODkwNjA1NDI1ODg7Mnw=.json?from=-4min&until=-40s",
 	subsequentDataURL = "http://bootstrap.client-solutions-uat.fyre.co/api/v3.0/stats.collections.curate/MzAzOTkwOnNuLTEzODkwNjA1NDI1ODg7Mnw=.json?from=-40s&until=-20s";
 
 var dataSet = [];
@@ -33,7 +33,7 @@ var WIDTH = 1920,
 	HEIGHT = 1080,
 	line;
 
-var margin = {top: 20, right: 80, bottom: 168, left: 50},
+var margin = {top: 170, right: 80, bottom: 168, left: 50},
     width = WIDTH - margin.left - margin.right,
     height = HEIGHT - margin.top - margin.bottom,
 	padding = 0;
@@ -64,7 +64,7 @@ var graphclip = svg.append("defs").append("svg:clipPath")
 		.attr("id", "clip-rect")
 		.attr("x", "0")
 		.attr("y", "0")
-		.attr("width", width-260)
+		.attr("width", width-300)
 		.attr("height", height);
 
 var graphBody = svg.append("g")
@@ -136,15 +136,16 @@ function draw(newdata, count) {
 
 	if (count == 1) { // first run
 		
+		var xAxisPosition = height + 125;
+		
 		svg.append("g")
 		  	.attr("class", "x axis")
 		  	.attr("id", "xAxis")
-         	.attr("transform", "translate(-100, " + height + ")")
+         	.attr("transform", "translate(-120, " + xAxisPosition + ")")
 		  	.call(xAxis);
 		
 	 	var xticks = d3.select("#xAxis").selectAll(".tick");
 	 	
-	 	console.log(xticks[0].length)
 	 	for (var i = 0; i < xticks[0].length; ++i) {
 	 		$(xticks[0][i]).attr("class", "xtick tick-" + i);
 	 	}
@@ -156,7 +157,7 @@ function draw(newdata, count) {
 	
 		svg.append("g")
 			.attr("class", "y axis")
-			.attr("transform", "translate(" + width +",0)")
+			.attr("transform", "translate(" + width +",170)")
 			.call(yAxis)
 		
 		graphBody.append("path")
