@@ -1,0 +1,100 @@
+#avatar-wall {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+#avatar-wall .hub-list-footer {
+    display: none;
+}
+.nike-avatar-wall-foreground,
+.nike-avatar-wall-focus,
+.nike-avatar-wall-background {
+    position: absolute;
+    border: none;
+}
+
+.nike-avatar-wall-foreground {
+    z-index: 9999;
+}
+.hub-list article.content.nike-avatar-wall-fall {
+    -webkit-transform: translate3d(0px, 1800px, 0px);
+    transform: translate3d(0px, 1800px, 0px);
+    -webkit-transition: -webkit-transform 2s cubic-bezier(0.930, 0.010, 1.000, 0.520); 
+       -moz-transition: -moz-transform 2s cubic-bezier(0.930, 0.010, 1.000, 0.520); 
+         -o-transition: -o-transform 2s cubic-bezier(0.930, 0.010, 1.000, 0.520); 
+            transition: transform 2s cubic-bezier(0.930, 0.010, 1.000, 0.520); /* custom */
+
+    -webkit-transition-timing-function: cubic-bezier(0.930, 0.010, 1.000, 0.520); 
+       -moz-transition-timing-function: cubic-bezier(0.930, 0.010, 1.000, 0.520); 
+         -o-transition-timing-function: cubic-bezier(0.930, 0.010, 1.000, 0.520); 
+            transition-timing-function: cubic-bezier(0.930, 0.010, 1.000, 0.520); /* custom */
+}
+
+.nike-avatar-wall-focus {
+    z-index: 1;
+}
+.hub-list article.content.nike-avatar-wall-focus.nike-avatar-wall-fall {
+    -webkit-transform: translate3d(0px, 1800px, 0px);
+    transform: translate3d(0px, 1800px, 0px);
+    -webkit-transition: -webkit-transform 3s cubic-bezier(0.930, 0.010, 1.000, 0.520); 
+       -moz-transition: -moz-transform 3s cubic-bezier(0.930, 0.010, 1.000, 0.520); 
+         -o-transition: -o-transform 3s cubic-bezier(0.930, 0.010, 1.000, 0.520); 
+            transition: transform 3s cubic-bezier(0.930, 0.010, 1.000, 0.520); /* custom */
+
+    -webkit-transition-timing-function: cubic-bezier(0.930, 0.010, 1.000, 0.520); 
+       -moz-transition-timing-function: cubic-bezier(0.930, 0.010, 1.000, 0.520); 
+         -o-transition-timing-function: cubic-bezier(0.930, 0.010, 1.000, 0.520); 
+            transition-timing-function: cubic-bezier(0.930, 0.010, 1.000, 0.520); /* custom */
+}
+
+.nike-avatar-wall-background {
+    z-index: 0;
+}
+.hub-list article.content.nike-avatar-wall-background.nike-avatar-wall-fall {
+    -webkit-transform: translate3d(0px, 1800px, 0px);
+    transform: translate3d(0px, 1800px, 0px);
+    -webkit-transition: -webkit-transform 4s cubic-bezier(0.930, 0.010, 1.000, 0.520); 
+       -moz-transition: -moz-transform 4s cubic-bezier(0.930, 0.010, 1.000, 0.520); 
+         -o-transition: -o-transform 4s cubic-bezier(0.930, 0.010, 1.000, 0.520); 
+            transition: transform 4s cubic-bezier(0.930, 0.010, 1.000, 0.520); /* custom */
+
+    -webkit-transition-timing-function: cubic-bezier(0.930, 0.010, 1.000, 0.520); 
+       -moz-transition-timing-function: cubic-bezier(0.930, 0.010, 1.000, 0.520); 
+         -o-transition-timing-function: cubic-bezier(0.930, 0.010, 1.000, 0.520); 
+            transition-timing-function: cubic-bezier(0.930, 0.010, 1.000, 0.520); /* custom */
+}
+
+.hub-list article.content {
+    top: -120px;
+}
+#avatar-wall .content {
+    border: none;
+    margin: 0;
+    padding: 0;
+    background-color: transparent;
+}
+#avatar-wall .content-author-avatar {
+    position: absolute;
+    width: 75px;
+    height: 75px;
+    background-size: cover;
+    border: none;
+    -webkit-border-radius: 75px;
+    -moz-border-radius: 75px;
+    border-radius: 75px;
+}
+#avatar-wall .nike-avatar-wall-background .content-author-avatar {
+    width: 40px;
+    height: 40px;
+    -webkit-filter: blur(2px);
+    -moz-filter: blur(2px);
+    filter: blur(2px);
+}
+#avatar-wall .nike-avatar-wall-foreground .content-author-avatar {
+    width: 110px;
+    height: 110px;
+    opacity: 0.7;
+    -webkit-filter: blur(5px);
+    -moz-filter: blur(5px);
+    filter: blur(5px);
+}
