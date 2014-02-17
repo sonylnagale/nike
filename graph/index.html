@@ -5,8 +5,8 @@
 <div id="graphMain">
 	<div id="graph"></div>
 </div>
-<script src="//cdn.jsdelivr.net/d3js/3.4.1/d3.min.js"></script>
-<!-- <script src="http://d3js.org/d3.v3.js"></script>-->
+<!-- <script src="//cdn.jsdelivr.net/d3js/3.4.1/d3.min.js"></script>-->
+<script src="http://d3js.org/d3.v3.js"></script>
  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" charset="utf-8"></script>
  
 
@@ -209,16 +209,10 @@ LF.line = d3.svg.line()
 	})
 	.interpolate('monotone');
 
-/* svg.select(".y.axis").transition()
-	.duration(axisDuration)
-	.ease("linear")
-	.call(LF.yAxis);
- */
-var t = svg.transition().duration(axisDuration);
-t.selectAll("path.line") 		
-	.attr("d", function(d) { return LF.line(d.values); })
+var t = svg.transition()
+			.duration(axisDuration);
 
-graphBody.selectAll("path.line")
+ graphBody.selectAll("path.line")
 	.data(cities) // set the new data
 	.attr("transform", "translate(" + LF.x(0) + ")") // set the transform to the right by x(1) pixels (6 for the scale we've set) to hide the new value
  	.attr("d", function(d) { return LF.line(d.values); })
