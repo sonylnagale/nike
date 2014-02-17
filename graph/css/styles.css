@@ -4,14 +4,14 @@
 @font-face
 {
 	font-family: TradeCaps;
-	src: url(../fonts/tradegothic/TradeGothicLTStd-BdCn20.otf);
+	src: url(../../fonts/tradegothic/TradeGothicLTStd-BdCn20.otf);
 	font-weight: normal;
 }
 
 @font-face
 {
 	font-family: TradeCopy;
-	src: url(../fonts/tradegothic/TradeGothicLTStd.otf);
+	src: url(../../fonts/tradegothic/TradeGothicLTStd.otf);
 	font-weight: normal;
 }
 
