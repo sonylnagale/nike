@@ -6,7 +6,7 @@ var SLIDE_CONFIG = {
     carouselInterval: 10000,
 
     // The time (in milliseconds) between tweets fading in and out
-    feedScrollerInterval: 5000,
+    feedScrollerInterval: 10000,
 
     // The number of rotations before the carousel reloads
     reloadCycle: 0,
