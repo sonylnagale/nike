@@ -119,6 +119,13 @@ function (Collection, ListView, WallView) {
             $carousel.on("slid.bs.carousel", function () {
                 $activeSlide = $carousel.find(".active");
 
+                console.log($activeSlide);
+                var slideDuration = $activeSlide.attr('data-slide-duration');
+                if (slideDuration) {
+                console.log(parseInt(slideDuration, 10));
+                    setTimeout(function () { $carousel.carousel('next') }, parseInt(slideDuration, 10));
+                }
+
                 if (self.config.reloadCycle > 0) {
                     if ((self.config.reloadCycle * self.totNumSlides) == ++self.slideCounter) {
                         self.firstRun = false;
@@ -129,9 +136,10 @@ function (Collection, ListView, WallView) {
             });
 
             $carousel.carousel({
-                interval: this.config.carouselInterval,
+                interval: false,
                 pause: ""
             });
+            $carousel.trigger('slid.bs.carousel');
         },
 
         /**
