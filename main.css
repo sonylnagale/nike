@@ -2,11 +2,13 @@
  * GENERAL STYLES
  **/
 body {
-    background-image: url(imgs/bg.png);
-    background-size: cover;
     font-family: TradeCopy;
     margin: 0px;
     padding: 0px;
+}
+.kd-aunt-pearl-bg {
+    background: url(imgs/kdauntpearl.png) no-repeat left 225px;
+    background-size: "contain";
 }
 #carousel {
     width: 1920px;
@@ -29,11 +31,6 @@ body {
     padding: 40px;
     text-align: center;
     width: 100%;
-}
-
-.feed-container,
-.wall-container {
-    background: url('imgs/kdauntpearl.png') no-repeat left 225px;
 }
 
 .wall-container:after{
@@ -382,6 +379,8 @@ body {
  * SLATES
  **/
 .slate {
+    background-image: url(imgs/gradient-bg.png);
+    background-size: "cover";
     color: #333333;
     display: table;
     height: 1080px;

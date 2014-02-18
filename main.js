@@ -120,6 +120,7 @@ function (Collection, ListView, WallView) {
          **/
         initCarousel: function() {
             var $carousel = $(".carousel");
+            var $activeSlide;
             var self = this;
 
             $carousel.on("slide.bs.carousel", function () {
@@ -133,11 +134,13 @@ function (Collection, ListView, WallView) {
                     $(".sm-counter-wrapper").show();   
                 }
 
-                /* pause and resume the media wall*/
+                /* pause the media wall */
                 if ($activeSlide.attr("data-next-slide") == "media-wall") {
                     self.mediaWallInstance.pause();
+                    $carousel.find(".wall-container").addClass("kd-aunt-pearl-bg");
                 }
 
+                /* resume the media wall */
                 if ($activeSlide.find("#wall").length > 0) {
                     self.mediaWallInstance.resume();
                 }
@@ -145,12 +148,23 @@ function (Collection, ListView, WallView) {
             });
 
             $carousel.on("slid.bs.carousel", function () {
+                $activeSlide = $carousel.find(".active");
+
                 if (self.config.reloadCycle > 0) {
                     if ((self.config.reloadCycle * self.totNumSlides) == ++self.slideCounter) {
                         self.firstRun = false;
                         self.slideCounter = 0;
                         location.reload();
                     }
+                }
+
+                /* Background trickery */
+                if ($activeSlide.find("#wall").length > 0) {
+                    // $activeSlide.find(".wall-container").removeClass("kd-aunt-pearl-bg");
+                }
+
+                if ($activeSlide.find("#feed2").length > 0) {
+                    $activeSlide.find(".feed-container").addClass("kd-aunt-pearl-bg");
                 }
             });
 
