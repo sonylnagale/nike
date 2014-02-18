@@ -30,50 +30,7 @@ function (Collection, ListView, WallView) {
          */
         firstRun: true,
 
-        /**
-         * Configuration
-         **/
-        config: {
-            // The time (in milliseconds) between slide shifts
-            carouselInterval: 10000,
-
-            // The time (in milliseconds) between tweets fading in and out
-            feedScrollerInterval: 5000,
-            
-            // The number of rotations before the carousel reloads
-            reloadCycle: 0,
-            
-            // Collections info
-            mediaWall: {
-                network: "strategy-prod.fyre.co",
-                siteId: '340628',
-                articleId: 'custom-1389909647018'
-            },
-            listFeed1: {
-                network: "strategy-prod.fyre.co",
-                siteId: '340628',
-                articleId: 'custom-1392076496202'
-            },
-            listFeed2: {
-                network: "strategy-prod.fyre.co",
-                siteId: '340628',
-                articleId: 'custom-1392076496202'
-            },
-
-            // ncomments config
-            ncomments: {
-                network: "strategy-prod.fyre.co",
-                siteId: "340628",
-                articleIds: ["custom-1392076496202"],
-                targetEls: [".lrg-counter", ".sm-counter"],
-            },
-            get: function (key) {
-                 return this[key];
-            },
-            set: function (key, value) {
-                this[key] = value;
-            }
-        },
+        config: SLIDE_CONFIG,
 
         /**
          * Kicks off the whole process
@@ -162,6 +119,15 @@ function (Collection, ListView, WallView) {
             $carousel.on("slid.bs.carousel", function () {
                 $activeSlide = $carousel.find(".active");
 
+                console.log($activeSlide);
+                var slideDuration = $activeSlide.attr('data-slide-duration');
+                if (slideDuration) {
+                    slideDuration = parseInt(slideDuration, 10);
+                } else {
+                    slideDuration = this.config.carouselInterval;
+                }
+                setTimeout(function () { $carousel.carousel('next') }, slideDuration);
+
                 if (self.config.reloadCycle > 0) {
                     if ((self.config.reloadCycle * self.totNumSlides) == ++self.slideCounter) {
                         self.firstRun = false;
@@ -172,9 +138,10 @@ function (Collection, ListView, WallView) {
             });
 
             $carousel.carousel({
-                interval: this.config.carouselInterval,
+                interval: false,
                 pause: ""
             });
+            $carousel.trigger('slid.bs.carousel');
         },
 
         /**
