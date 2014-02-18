@@ -50,6 +50,11 @@ body {
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', endColorstr='#ffffff',GradientType=0 ); /* IE6-9 */
     pointer-events:none;
 }
+
+.content-attachments-stacked {
+    display: none;
+}
+
 .content .content-body a,
 .content a {
     color: #fd5300;
