@@ -122,9 +122,11 @@ function (Collection, ListView, WallView) {
                 console.log($activeSlide);
                 var slideDuration = $activeSlide.attr('data-slide-duration');
                 if (slideDuration) {
-                console.log(parseInt(slideDuration, 10));
-                    setTimeout(function () { $carousel.carousel('next') }, parseInt(slideDuration, 10));
+                    slideDuration = parseInt(slideDuration, 10);
+                } else {
+                    slideDuration = this.config.carouselInterval;
                 }
+                setTimeout(function () { $carousel.carousel('next') }, slideDuration);
 
                 if (self.config.reloadCycle > 0) {
                     if ((self.config.reloadCycle * self.totNumSlides) == ++self.slideCounter) {
