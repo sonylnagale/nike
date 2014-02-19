@@ -1,0 +1,172 @@
+@import url(http://fonts.googleapis.com/css?family=Open+Sans+Condensed:700);
+
+
+@font-face
+{
+	font-family: TradeCaps;
+	src: url(../../fonts/tradegothic/TradeGothicLTStd-BdCn20.otf);
+	font-weight: normal;
+}
+
+@font-face
+{
+	font-family: TradeCopy;
+	src: url(../../fonts/tradegothic/TradeGothicLTStd.otf);
+	font-weight: normal;
+}
+
+
+body {
+	font-family: "TradeCaps", sans-serif;
+	margin:0;
+	padding:0;
+}
+
+#graphMain {
+	width: 1920px;
+	height: 1080px;
+	background-image: url(../img/bg.jpg);
+	background-repeat: no-repeat;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.x.axis {
+	height: 40px;
+}
+.x.axis path {
+  display: none;
+}
+
+.line {
+  fill: none;
+  stroke: #fd5300;
+  stroke-width: 13px;
+  color: #fd5300;
+}
+.tick {
+	stroke: #eee;
+	stroke-width:0.5px;
+}
+
+.tick text {
+	font-size: 30px;
+	font-weight: strong;
+}
+#graph {
+	width: 1920px;
+	height: 1080px;
+}
+.legend {
+	cursor:pointer;
+}
+
+.legend text {
+	font-size: 14px;
+}
+
+.domain {
+	padding-left:10px;
+	align:center;
+}
+
+.y.axis .tick text {
+	font-size: 45px;
+}
+
+.domain {
+	display:none;
+}
+
+.xtick line {
+	display: none;
+}
+
+.xtick text {
+	font-size: 30px;
+	color: #666;
+	line-height:36px;
+}
+
+
+
+.tick-3 text {
+	opacity: .025;
+}
+.tick-4 text {
+	opacity: .05;
+}
+.tick-5 text {
+	opacity: .0975;
+}
+.tick-6 text {
+	opacity: .145;
+}
+.tick-7 text {
+	opacity: .1925;
+}
+.tick-8 text {
+	opacity: .24;
+}
+.tick-9 text {
+	opacity: .2875;
+}
+.tick-10 text {
+	opacity: .335;
+}
+.tick-11 text {
+	opacity: .3825;
+}
+.tick-12 text {
+	opacity: .43;
+}
+.tick-13 text {
+	opacity: .4775;
+}
+.tick-14 text {
+	opacity: .525;
+}
+.tick-15 text {
+	opacity: .5725;
+}
+.tick-16 text {
+	opacity: .62;
+}
+.tick-17 text {
+	opacity: .6675;
+}
+.tick-18 text {
+	opacity: .715;
+}
+.tick-19 text {
+	opacity: .7625;
+}
+.tick-20 text {
+	opacity: .81;
+}
+.tick-21 text {
+	opacity: .8575;
+}
+.tick-22 text {
+	opacity: .905;
+}
+.tick-23 text {
+	opacity: .9525;
+}
+.tick-24 text {
+	opacity: 1;
+}
+
+.tick-0 text, .tick-1 text, .tick-2 text, .tick-3 text, .tick-4 text, .tick-6 text, .tick-7 text, .tick-9 text, .tick-10 text, 
+.tick-12 text, 	.tick-13 text, .tick-15 text, .tick-16 text, .tick-18 text, .tick-19 text, .tick-21 text, .tick-22 text {
+	opacity: 0;
+}
+
+.y.axis .tick line  {
+	display:none;
+}
