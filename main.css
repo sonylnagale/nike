@@ -265,11 +265,6 @@ body {
     top: 3px;
 }
 
-#feed1 .content .content-created-at:after,
-#feed2 .content .content-created-at:after {
-    content:" ago";
-}
-
 #feed1 .content-with-image .content-created-at,
 #feed2 .content-with-image .content-created-at {
     margin: 16px 0 0 75px;
