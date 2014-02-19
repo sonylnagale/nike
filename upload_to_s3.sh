@@ -133,6 +133,7 @@ then
     popd
 fi
 
+#TODO ONLY DO THIS IF -e gzip is set.
 find $TEMPDIR -type f -print0 | xargs -0 gzip
 find $TEMPDIR -type f -name '*.gz' | while read f; do mv "$f" "${f%.gz}"; done
 
