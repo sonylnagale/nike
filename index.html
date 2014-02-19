@@ -13,7 +13,7 @@
         <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.3/js/bootstrap.min.js"></script>
         <!-- End Bootstrap 3 -->
 
-        <link rel="stylesheet" href="animate.css" />
+        <link rel="stylesheet" href="css/animate.css" />
         <link rel="stylesheet" href="fonts/futura/futura.css" />
         <link rel="stylesheet" href="fonts/tradegothic/trade.css" />
         <link rel="stylesheet" href="main.css" />
@@ -90,9 +90,15 @@
                         <div id="feed1"></div>
                     </div>
                 </div>
-                <div class="item" data-next-slide="nike-map" data-slide-duration="10000">
+                <div class="item" data-slide-duration="10000">
                     <div class="feed-container">
                         <div id="feed2"></div>
+                    </div>
+                </div>
+                <div class="item" data-next-slide="nike-map" data-slide-duration="12000">
+                    <div class="slate" style="width: 1920px">
+                        <div id="nike-graph"></div>
+                        <link rel="stylesheet" href="css/graph.css" />
                     </div>
                 </div>
                 <div class="item nike-map" data-slide-duration="18000">
@@ -123,8 +129,11 @@
         <script type="text/javascript" src="js/avatar-wall-view.js"></script>
         <script type="text/javascript" src="js/counter-wall.js"></script>
 
-        <!-- map scripts -->
+        <!-- graph scripts -->
         <script src="http://d3js.org/d3.v3.min.js"></script>
+        <script type="text/javascript" src="js/tps-graph.js"></script>
+
+        <!-- map scripts -->
         <script src="http://cdn.livefyre.com/libs/apps/cheung31/streamhub-map/v1.0.2-build.40/streamhub-map.min.js"></script>
         <script type="text/javascript" src="js/countries.js"></script>
         <script type="text/javascript" src="js/nike-collection-map-view.js"></script>

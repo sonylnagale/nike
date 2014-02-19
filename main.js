@@ -119,14 +119,17 @@ function (Collection, ListView, WallView) {
             $carousel.on("slid.bs.carousel", function () {
                 $activeSlide = $carousel.find(".active");
 
-                console.log($activeSlide);
                 var slideDuration = $activeSlide.attr('data-slide-duration');
                 if (slideDuration) {
                     slideDuration = parseInt(slideDuration, 10);
                 } else {
                     slideDuration = this.config.carouselInterval;
                 }
-                setTimeout(function () { $carousel.carousel('next') }, slideDuration);
+                setTimeout(function () {
+                    if (! $carousel.data()['bs.carousel'].paused) {
+                        $carousel.carousel('next');
+                    }
+                }, slideDuration);
 
                 if (self.config.reloadCycle > 0) {
                     if ((self.config.reloadCycle * self.totNumSlides) == ++self.slideCounter) {
@@ -157,21 +160,6 @@ function (Collection, ListView, WallView) {
             var collection1 = new Collection(this.config.mediaWall);
             this.mediaWallInstance = collection1;
             collection1.pipe(wallView);
-
-            // var archive = collection1.createArchive();
-            // var updater = collection1.createUpdater();
-            // archive.on("error", function () {
-            //   if (console && typeof console.log === "function") {
-            //     console.log("archive error", arguments);
-            //   }
-            // });
-            // updater.on("error", function () {
-            //   if (console && typeof console.log === "function") {
-            //     console.log("updater error", arguments);
-            //   }
-            // });
-            // updater.pipe(wallView);
-            // archive.pipe(wallView.more);
 
             var listView1 = new ListView({
                 el: document.getElementById("feed1")
