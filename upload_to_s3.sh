@@ -16,7 +16,8 @@ function usage {
     -h: display this help
     -b: bucket (S3 destination)
     -s: source (Where to copy from)
-    -m: age (How long assets live in the cache)"
+    -m: age (How long assets live in the cache)
+    -i: invalidation (Where to put an invalidation list file)"
 
     return 0
 
@@ -31,7 +32,7 @@ function set_options {
 
     export MAX_AGE="300"
     export ENCODING=""
-    while getopts ":hs:b:m:e:" opt
+    while getopts ":hs:b:m:e:i:" opt
     do
         case $opt in
         h)
@@ -49,6 +50,9 @@ function set_options {
             ;;
         e)
             export ENCODING="$OPTARG"
+            ;;
+        i)
+            export INVALIDATION_FILE="$PWD/$OPTARG"
             ;;
         \?)
             echo "$0: error - unrecognized option $1"
@@ -120,6 +124,15 @@ fi
 
 TEMPDIR=$(mktemp -dt jsdeploy.XXXXX)
 cp -R "$SRC_DIR"/* $TEMPDIR
+if [ -n $INVALIDATION_FILE ]
+then
+    echo "Saving invalidation file to $INVALIDATION_FILE"
+
+    pushd $TEMPDIR
+    find * -type f > $INVALIDATION_FILE
+    popd
+fi
+
 find $TEMPDIR -type f -print0 | xargs -0 gzip
 find $TEMPDIR -type f -name '*.gz' | while read f; do mv "$f" "${f%.gz}"; done
 
