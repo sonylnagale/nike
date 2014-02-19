@@ -11,10 +11,11 @@ function usage {
 
     echo "Usage:
     upload_to_s3.sh.sh -h
-    upload_to_s3.sh.sh -e <environment>
+    upload_to_s3.sh.sh -b <bucket> -s <source>
 
     -h: display this help
-    -e: environment ('qa', 'staging', or 'production')"
+    -b: bucket (S3 destination)
+    -s: source (Where to copy from)"
 
     return 0
 
@@ -27,15 +28,18 @@ function usage {
 function set_options {
     # Set global vars from commandline options and validation options given
 
-    while getopts ":he:" opt
+    while getopts ":hs:b:" opt
     do
         case $opt in
         h)
             usage
             exit 0
             ;;
-        e)
-            export LF_ENVIRONMENT="$OPTARG"
+        b)
+            export DST_BUCKET="$OPTARG"
+            ;;
+        s)
+            export SRC_DIR="$OPTARG"
             ;;
         \?)
             echo "$0: error - unrecognized option $1"
@@ -56,12 +60,19 @@ function set_options {
        usage
        return 1
    fi
-   if [ -z $LF_ENVIRONMENT ]
 
+   if [ -z $DST_BUCKET ]
        then
-       echo "Option -e is required."
+       echo "Option -b is required."
        usage
        return 1
+   fi
+
+   if [ -z $SRC_DIR ]
+   then
+     echo "Option -s is required."
+     usage
+     return 1
    fi
 
    return 0
@@ -74,21 +85,16 @@ set_options $*
 # Error messages are printed by set_options function
 [ "$?" -ne 0 ] && exit 1
 
-# This path is relative to the build root
-JS_VERSION_PATH='lfconv/VERSION'
-JS_ASSET_PATH='lfconv/build/bundle/'
-
-BUCKET_URL="s3://livefyre-zor"
-REMOTE_PATH="$BUCKET_URL/$LF_ENVIRONMENT/v3.0.$(<$JS_VERSION_PATH)/"
+BUCKET_URL="s3://$DST_BUCKET/"
 
 #
 # Assets are present
 #
 
 # Asset path must exist to upload resources
-if [ ! -d $JS_ASSET_PATH ]
+if [ ! -d $SRC_DIR ]
 then
-    echo "Could not find assets to upload in '$JS_ASSET_PATH'"
+    echo "Could not find assets to upload in '$SRC_DIR'"
     exit 1
 fi
 
@@ -104,9 +110,9 @@ then
 fi
 
 TEMPDIR=$(mktemp -dt jsdeploy.XXXXX)
-cp -R "$JS_ASSET_PATH"/* $TEMPDIR
+cp -R "$SRC_DIR"/* $TEMPDIR
 find $TEMPDIR -type f -print0 | xargs -0 gzip
 find $TEMPDIR -type f -name '*.gz' | while read f; do mv "$f" "${f%.gz}"; done
 
-s3cmd sync -M --acl-public --add-header 'Cache-Control:max-age=2592000' --add-header 'Content-Encoding:gzip' "$TEMPDIR/" "$REMOTE_PATH"
+s3cmd sync -M --acl-public --add-header 'Cache-Control:max-age=2592000' --add-header 'Content-Encoding:gzip' "$TEMPDIR/" "$BUCKET_URL"
 rm -rf $TEMPDIR
