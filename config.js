@@ -15,7 +15,7 @@ var SLIDE_CONFIG = {
     mediaWall: {
         network: "strategy-prod.fyre.co",
         siteId: '340628',
-        articleId: 'custom-1389909647018'
+        articleId: 'custom-1385074953161'
     },
     listFeed1: {
         network: "strategy-prod.fyre.co",

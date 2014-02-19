@@ -211,7 +211,7 @@ function (Collection, ListView, WallView) {
     
     $(window).on('load', function () { Hub.init(); });
 
-    setInterval(function () {
-        $('body').trigger('increment.counter');
-    }, 750);
+    // setInterval(function () {
+    //     $('body').trigger('increment.counter');
+    // }, 750);
 }); 
