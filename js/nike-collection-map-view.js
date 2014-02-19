@@ -73,7 +73,7 @@ NikeCollectionMapView.prototype._drawMap = function () {
     });
     countriesLayer.addTo(this._map);
 
-    var svg = d3.select('svg');
+    var svg = d3.select('svg.leaflet-zoom-animated');
     svg.append('defs')
        .append('pattern')
        .attr('id', 'countryPattern')
@@ -81,7 +81,7 @@ NikeCollectionMapView.prototype._drawMap = function () {
        .attr('width', '3')
        .attr('height', '3')
        .append('image')
-       .attr('xlink:href', '/imgs/map-fill.png')
+       .attr('xlink:href', '../imgs/map-fill2.png')
        .attr('width', '3')
        .attr('height', '3');
 };

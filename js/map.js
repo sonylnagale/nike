@@ -35,7 +35,7 @@ function initMap() {
         el: document.getElementById('nike-map')
         ,collectionToLocation: collectionToLocation
         ,leafletMapOptions: {
-            center: [36.02571363233062, -92.61560440063477],
+            center: [31.045837782944986, -95.78360229847021],
             zoom: 5,
             dragging: false,
             touchZoom: false,
