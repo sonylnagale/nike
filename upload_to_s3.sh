@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# upload_to_s3.sh: A program to upload lfwebjs v3 content to S3.
+# upload_to_s3.sh: A program to upload content to S3.
 
 #
 # $rc usage()
@@ -17,7 +17,8 @@ function usage {
     -b: bucket (S3 destination)
     -s: source (Where to copy from)
     -m: age (How long assets live in the cache)
-    -i: invalidation (Where to put an invalidation list file)"
+    -i: invalidation (Where to put an invalidation list file)
+    -e: header encoding (i.e. pass gzip if you want it)"
 
     return 0
 
@@ -133,17 +134,19 @@ then
     popd
 fi
 
-#TODO ONLY DO THIS IF -e gzip is set.
-find $TEMPDIR -type f -print0 | xargs -0 gzip
-find $TEMPDIR -type f -name '*.gz' | while read f; do mv "$f" "${f%.gz}"; done
-
 MAXAGE_HEADER="Cache-Control:max-age=$MAX_AGE"
 
 if [ -z "$ENCODING" ]
 then
-  ENCODING_HEADER=""
+    ENCODING_HEADER=""
 else
-  ENCODING_HEADER="--add-header Content-Encoding:$ENCODING "
+    ENCODING_HEADER="--add-header Content-Encoding:$ENCODING "
+
+    if [ "$ENCODING" == "gzip" ]
+    then
+        find $TEMPDIR -type f -print0 | xargs -0 gzip
+        find $TEMPDIR -type f -name '*.gz' | while read f; do mv "$f" "${f%.gz}"; done
+    fi
 fi
 
 s3cmd sync -M --acl-public --add-header $MAXAGE_HEADER $ENCODING_HEADER "$TEMPDIR/" "$BUCKET_URL"
