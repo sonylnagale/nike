@@ -11,7 +11,7 @@ function usage {
 
     echo "Usage:
     upload_to_s3.sh.sh -h
-    upload_to_s3.sh.sh -b <bucket> -s <source> [-m <age>]
+    upload_to_s3.sh.sh -b <bucket> -s <source> [-m <age>] [-e <encoding>]
 
     -h: display this help
     -b: bucket (S3 destination)
@@ -30,7 +30,8 @@ function set_options {
     # Set global vars from commandline options and validation options given
 
     export MAX_AGE="300"
-    while getopts ":hs:b:m:" opt
+    export ENCODING=""
+    while getopts ":hs:b:m:e:" opt
     do
         case $opt in
         h)
@@ -45,6 +46,9 @@ function set_options {
             ;;
         m)
             export MAX_AGE="$OPTARG"
+            ;;
+        e)
+            export ENCODING="$OPTARG"
             ;;
         \?)
             echo "$0: error - unrecognized option $1"
@@ -119,5 +123,12 @@ cp -R "$SRC_DIR"/* $TEMPDIR
 find $TEMPDIR -type f -print0 | xargs -0 gzip
 find $TEMPDIR -type f -name '*.gz' | while read f; do mv "$f" "${f%.gz}"; done
 
-s3cmd sync -M --acl-public --add-header "Cache-Control:max-age=$MAX_AGE" --add-header 'Content-Encoding:gzip' "$TEMPDIR/" "$BUCKET_URL"
+if [ -z "$ENCODING" ]
+then
+  ENCODING_HEADER=""
+else
+  ENCODING_HEADER="--add-header Content-Encoding:$ENCODING "
+fi
+
+s3cmd sync -M --acl-public --add-header "Cache-Control:max-age=$MAX_AGE" $ENCODING_HEADER "$TEMPDIR/" "$BUCKET_URL"
 rm -rf $TEMPDIR
