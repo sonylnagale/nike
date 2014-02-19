@@ -1,15 +1,3 @@
-function maxValue(arr) {
-	var max = 0;
-	for (var i = 0 ; i < arr.length; ++i) {
-		if (arr[i][0] > max) {
-			max = arr[i][0];
-		}				
-	}
-	
-	return max;
-}	
-
-
 var initialDataURL = "http://bootstrap.client-solutions-uat.fyre.co/api/v3.0/stats.collections.curate/MzAzOTkwOnNuLTEzODkwNjA1NDI1ODg7Mnw=.json?from=-4min&until=-40s",
 	subsequentDataURL = "http://bootstrap.client-solutions-uat.fyre.co/api/v3.0/stats.collections.curate/MzAzOTkwOnNuLTEzODkwNjA1NDI1ODg7Mnw=.json?from=-40s&until=-20s";
 
@@ -58,6 +46,8 @@ var graphBody = svg.append("g")
 	.attr("transform", "translate(0," + margin.top + ")")
 	.attr("width",width);
 
+var bird = svg.selectAll("image").data([0]);
+
 function epochToDate (epoch) {
     return new Date(epoch * 1000);
 }
@@ -72,6 +62,17 @@ function trimData (rawData) {
 
     return trimmedData;
 }
+
+function maxValue(arr) {
+	var max = 0;
+	for (var i = 0 ; i < arr.length; ++i) {
+		if (arr[i][0] > max) {
+			max = arr[i][0];
+		}				
+	}
+	
+	return max;
+}	
 
 var count = 1;
 
@@ -88,7 +89,7 @@ function draw(newdata, count) {
 	// for a manual data add test
 	if (typeof newdata === 'number') {
 		newdata = [newdata,new Date().getTime() - 1000];
-		dataSet.push(newdata)
+		dataSet.push(newdata);
 	} else if (count != 1)	 {
 		dataSet = dataSet.concat(newdata);
 	} else if (count == 1) {
@@ -118,7 +119,7 @@ function draw(newdata, count) {
   	var yAxis = d3.svg.axis()
       	.scale(y)
       	.ticks(3)
-  	    .orient("right")
+  	    .orient("right");
 
 	if (count == 1) { // first run
 		
@@ -135,22 +136,24 @@ function draw(newdata, count) {
 	 	for (var i = 0; i < xticks[0].length; ++i) {
 	 		$(xticks[0][i]).attr("class", "xtick tick-" + i);
 	 	}
-	 	
-
-	
-		console.log($("#xAxis:first-child"));
-
 	
 		svg.append("g")
 			.attr("class", "y axis")
 			.attr("transform", "translate(" + width +",170)")
-			.call(yAxis)
+			.call(yAxis);
 		
 		graphBody.append("path")
 	      	.attr("class", "line")
 	      	.attr("id", "graphLine")
 	      	.style("stroke", "#fd5502");
 		
+		bird.enter()
+		    .append("image")
+		    .attr("xlink:href", "imgs/graph_twitter_bird_boxed.png")
+		    .attr("x", "1480")
+		    .attr("y", "500")
+		    .attr("width", "44")
+		    .attr("height", "46");
 	} // /if first run  
 	
 	// update with animation
@@ -161,7 +164,7 @@ function draw(newdata, count) {
 		.y(function(d) { 
 			return y(d[0]); 
 		})
-		.interpolate('monotone');
+		.interpolate('linear');
 
  
 	svg.select(".y.axis").transition()
@@ -180,14 +183,32 @@ function draw(newdata, count) {
 			.duration(10000) // for this demo we want a continual slide so set this to the same as the setInterval amount below
 			.attr("transform", "translate(" + x(-2) + ")"); // animate a slide to the left back to x(0) pixels to reveal the new value
 
+	var path = graphBody.selectAll("path").node();
+
+	console.log(path.getPointAtLength(x(0)).y);
+	
+	var birdY = path.getPointAtLength(x(0)).y - margin.top;
+	
+	bird.transition()
+	    	.ease("linear")
+	    	.duration(1000)
+	    	.attr("transform", "translate(0," + birdY +")"); // animate a slide to the left back to x(0) pixels to reveal the new value
+	
 	dataSet.splice(0,2);
 
-
+//	console.log(path.getPointAtLength(x(0)).y);
+	
+//	$("#twitterBird").animate({
+//		top: path.getPointAtLength(x(0)).y + margin.top,
+//		easing: "linear"
+//	}, 5000, function() {
+//		// complete handler
+//	});
 };
 
-d3.json(initialDataURL, drawSetup)
+d3.json(initialDataURL, drawSetup);
 
 setInterval(function() {
-	d3.json(subsequentDataURL, drawSetup)
+	d3.json(subsequentDataURL, drawSetup);
 },10000);
 
