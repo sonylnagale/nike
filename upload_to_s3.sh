@@ -12,10 +12,10 @@ function usage {
     echo "Usage:
     upload_to_s3.sh.sh -h
     upload_to_s3.sh.sh -e <environment>
-                   
+
     -h: display this help
     -e: environment ('qa', 'staging', or 'production')"
-                                            
+
     return 0
 
 }
@@ -49,23 +49,23 @@ function set_options {
             ;;
         esac
     done
-    
+
    if [ $# -eq 0 ]
        then
        echo "One or more arguments must be specified."
        usage
        return 1
    fi
-   
    if [ -z $LF_ENVIRONMENT ]
+
        then
        echo "Option -e is required."
        usage
        return 1
    fi
-   
+
    return 0
-  
+
 }
 
 set_options $*
