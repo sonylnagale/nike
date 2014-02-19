@@ -123,6 +123,8 @@ cp -R "$SRC_DIR"/* $TEMPDIR
 find $TEMPDIR -type f -print0 | xargs -0 gzip
 find $TEMPDIR -type f -name '*.gz' | while read f; do mv "$f" "${f%.gz}"; done
 
+MAXAGE_HEADER="Cache-Control:max-age=$MAX_AGE"
+
 if [ -z "$ENCODING" ]
 then
   ENCODING_HEADER=""
@@ -130,5 +132,5 @@ else
   ENCODING_HEADER="--add-header Content-Encoding:$ENCODING "
 fi
 
-s3cmd sync -M --acl-public --add-header "Cache-Control:max-age=$MAX_AGE" $ENCODING_HEADER "$TEMPDIR/" "$BUCKET_URL"
+s3cmd sync -M --acl-public --add-header $MAXAGE_HEADER $ENCODING_HEADER "$TEMPDIR/" "$BUCKET_URL"
 rm -rf $TEMPDIR
