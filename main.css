@@ -171,10 +171,6 @@ body {
     top: 1px;
 }
 
-#wall .content .content-created-at:after{
-    content: " ago";
-}
-
 #wall .content .content-actions {
     margin: 0px -20px 0px 0px;
     display: none;
