@@ -11,11 +11,12 @@ function usage {
 
     echo "Usage:
     upload_to_s3.sh.sh -h
-    upload_to_s3.sh.sh -b <bucket> -s <source>
+    upload_to_s3.sh.sh -b <bucket> -s <source> [-m <age>]
 
     -h: display this help
     -b: bucket (S3 destination)
-    -s: source (Where to copy from)"
+    -s: source (Where to copy from)
+    -m: age (How long assets live in the cache)"
 
     return 0
 
@@ -28,7 +29,8 @@ function usage {
 function set_options {
     # Set global vars from commandline options and validation options given
 
-    while getopts ":hs:b:" opt
+    export MAX_AGE="300"
+    while getopts ":hs:b:m:" opt
     do
         case $opt in
         h)
@@ -40,6 +42,9 @@ function set_options {
             ;;
         s)
             export SRC_DIR="$OPTARG"
+            ;;
+        m)
+            export MAX_AGE="$OPTARG"
             ;;
         \?)
             echo "$0: error - unrecognized option $1"
@@ -114,5 +119,5 @@ cp -R "$SRC_DIR"/* $TEMPDIR
 find $TEMPDIR -type f -print0 | xargs -0 gzip
 find $TEMPDIR -type f -name '*.gz' | while read f; do mv "$f" "${f%.gz}"; done
 
-s3cmd sync -M --acl-public --add-header 'Cache-Control:max-age=2592000' --add-header 'Content-Encoding:gzip' "$TEMPDIR/" "$BUCKET_URL"
+s3cmd sync -M --acl-public --add-header "Cache-Control:max-age=$MAX_AGE" --add-header 'Content-Encoding:gzip' "$TEMPDIR/" "$BUCKET_URL"
 rm -rf $TEMPDIR
