@@ -3,213 +3,349 @@ Livefyre.require([
     "streamhub-sdk/content/views/content-list-view",
     "streamhub-wall"],
 function (Collection, ListView, WallView) {
-    var Hub = {
-        /*
-         * Total number of slides
-         */
-        totNumSlides: 0,
 
-        /*
-         * Number of slides that have been seen
-         */
-        slideCounter: 0,
-        
-        /*
-         * Pointer to media wall
-         */
-        mediaWallInstance: null,
+    var Slideshow = function (opts) {
+        opts = opts || {};
 
-        /*
-         * Pointer to list feed
-         */
-        feedInstance1: null,
-        feedInstance2: null,
+        this._slideEls = $('.item');
+        this._collections = {};
+        this._apps = {};
+        this._feedIntervalIds = {};
+        this._prevIndex = this._slideEls.length-1;
+        this._index = 0;
+        this._firstRun = true;
+        this._config = SLIDE_CONFIG;
 
-        /**
-         * Flag if this is the first cycle of the carousel
-         */
-        firstRun: true,
+        this.$carousel = window.$carousel = opts.el ? $(opts.el) : $('<div>');
+        this.slideCounter = 0;
+        this.numSlides = this._slideEls.length;
+        this.$activeSlide;
 
-        config: SLIDE_CONFIG,
+        this._parseQueryArgs();
+        this._attachHandlers();
 
-        /**
-         * Kicks off the whole process
-         */
-        init: function () {
-            // Parse out query params
-            var url = location.search;
-            var params = url.split("&");
+        this._initCarousel();
+    };
 
-            for (var i = 0, len = params.length; i < len; i++) {
-                var kv = params[i].split("=");
-                kv[0] = kv[0].replace("?", "");
-                kv[1] = parseInt(kv[1]);
+    Slideshow.prototype.isPaused = function () {
+        return this.$carousel.data()['bs.carousel'].paused;
+    }
 
-                // Carousel Interval
-                if (kv[0] == "ci") {
-                    this.config.set("carouselInterval", kv[1]);
-                }
+    Slideshow.prototype.pause = function () {
+        this.$carousel.carousel('pause');
+        clearTimeout(this._timeoutId);
+    };
 
-                // Feed Interval
-                if (kv[0] == "fi") {
-                    this.config.set("feedScrollerInterval", kv[1]);
-                }
+    Slideshow.prototype.resume = function () {
+        this.$carousel.carousel('cycle');
+    };
 
-                // Reload Carousel
-                if (kv[0] == "rc") {
-                    this.config.set("reloadCycle", kv[1]);
+    Slideshow.prototype.next = function () {
+        this.$carousel.carousel('next');
+        if (this._timeoutId) {
+            clearTimeout(this._timeoutId);
+        }
+    };
+
+    Slideshow.prototype.prev = function () {
+        this.$carousel.carousel('prev');
+        if (this._timeoutId) {
+            clearTimeout(this._timeoutId);
+        }
+    };
+
+    Slideshow.prototype.jump = function (index) {
+        this.$carousel.carousel(index);
+    };
+
+    Slideshow.prototype.beginSlideTransitionEvent = 'slide.bs.carousel';
+    Slideshow.prototype.endSlideTransitionEvent = 'slid.bs.carousel';
+
+    Slideshow.prototype._getCollectionForSlide = function (slideIndex) {
+        return this._collections[slideIndex];
+    };
+
+    Slideshow.prototype._pauseCollection = function (slideIndex) {
+        var collectionToPause = this._getCollectionForSlide(slideIndex);
+        if (collectionToPause) {
+            collectionToPause.pause();
+        }
+    };
+
+    Slideshow.prototype._activateCollection = function (slideIndex) {
+        var appView = this._initAppForSlide(slideIndex);
+        if (! appView) {
+            return;
+        }
+
+        var collectionToActivate = this._getCollectionForSlide(slideIndex);
+        collectionToActivate.resume();
+    };
+
+    Slideshow.prototype._initAppForSlide = function (slideIndex) {
+        if (this._apps[slideIndex] || this._apps[slideIndex] === null) {
+            return;
+        }
+
+        var view;
+        var slideEl = this._slideEls.eq(slideIndex);
+        if (slideEl.hasClass('nike-media-wall')) {
+            view = this.initMediaWall();
+        } else if (slideEl.hasClass('nike-counter-wall')) {
+            view = this.initCounterWall();
+        } else if (slideEl.hasClass('nike-feed-1')) {
+            view = this.initFeed1();
+        } else if (slideEl.hasClass('nike-feed-2')) {
+            view = this.initFeed2();
+        }
+        // Note: initMap invoked in endSlideTransitionEvent callback, as 
+        // Leaflet expects a visible parent div to render within.
+
+        if (! view) {
+            this._apps[slideIndex] = null;
+        } else {
+            this._apps[slideIndex] = view;
+        }
+
+        return view;
+    };
+    
+    Slideshow.prototype._initCarousel = function() {
+        $carousel.carousel({
+            interval: false,
+            pause: ""
+        });
+        $carousel.trigger(this.endSlideTransitionEvent);
+    };
+
+    Slideshow.prototype._attachHandlers = function () {
+        var self = this;
+
+        this.$carousel.on(this.beginSlideTransitionEvent, function () {
+            self._prevIndex = self._slideEls.index(self.$activeSlide[0]);
+            self._index = self._prevIndex+1;
+            self.$activeSlide = self._slideEls.eq(self._index);
+
+            if (self.$activeSlide.hasClass('nike-media-wall')) {
+                //self._apps[self._prevIndex].clearLoop();
+            }
+            if (self.$activeSlide.hasClass('nike-feed-2')) {
+                clearInterval(self._feedIntervalIds[1]);
+            }
+            if (self.$activeSlide.hasClass('nike-graph')) {
+                clearInterval(self._feedIntervalIds[2]);
+            }
+
+            // KD text bg
+            if (self.$activeSlide.hasClass('nike-kd-bg')) {
+                self.$carousel.addClass('nike-kd-bg');
+            } else {
+                self.$carousel.removeClass('nike-kd-bg');
+            }
+
+            // Hide and display small counter
+            if (self.$activeSlide.attr("data-next-slide") == "counter") {
+                $(".sm-counter-wrapper").hide();
+            } else if (!(self.$activeSlide.attr("data-hide-counter") && self._firstRun)) {
+                $(".sm-counter-wrapper").show();
+            }
+
+            self._pauseCollection(self._prevIndex);
+        });
+
+        this.$carousel.on(this.endSlideTransitionEvent, function () {
+            self.$activeSlide = self.$carousel.find(".active");
+
+            // Operations on next slide
+            var nextIndex = self._index+1;
+            var $nextSlide = self._slideEls.eq(nextIndex);
+            if ($nextSlide.hasClass('nike-counter-wall')) {
+                var view = self._apps[nextIndex];
+                if (view) {
+                    //view.restartLoop();
                 }
             }
 
-            // Figure out the number of slides
-            this.totNumSlides = $(".item").length;
+            // Preload the next slide,
+            // with 2s delay to avoid janking slide animation.
+            setTimeout(function () {
+                self._activateCollection(nextIndex);
+            }, 2000);
 
-            // And go...
-            this.initCollections();
-            this.initFeedScroller("#feed1");
-            this.initFeedScroller("#feed2");
-            this.initFlipCounter();
-            this.initCarousel();
-        },
-
-        /**
-         * Setup for the carousel
-         **/
-        initCarousel: function() {
-            var $carousel = window.$carousel = $(".carousel");
-            var self = this;
-
-            $carousel.on("slide.bs.carousel", function () {
-                $activeSlide = $carousel.find(".active");
-
-                if ($activeSlide.hasClass('nike-kd-bg')) {
-                    $carousel.addClass('nike-kd-bg');
-                } else {
-                    $carousel.removeClass('nike-kd-bg');
+            // Operations on active slide
+            if (self.$activeSlide.hasClass('nike-feed-1')) {
+                var view = self._apps[self._index];
+                if (view) {
+                    self._rotateFeed(1);
                 }
-
-                /* smoke and mirrors for the small counter*/
-                if ($activeSlide.attr("data-next-slide") == "counter") {
-                    $(".sm-counter-wrapper").hide();
+            }
+            if (self.$activeSlide.hasClass('nike-feed-2')) {
+                var view = self._apps[self._index];
+                if (view) {
+                    self._rotateFeed(2);
                 }
-                else if (!($activeSlide.attr("data-hide-counter") && self.firstRun)) {
-                    $(".sm-counter-wrapper").show();   
+            }
+            if (self.$activeSlide.hasClass('nike-map')) {
+                $(window).trigger('resize');
+                if (self._apps[self._index]) {
+                   return;
                 }
+                var view = self.initMap();
+                self._apps[self._index] = view;
+            }
 
-                if ($activeSlide.attr("data-next-slide") == "avatar-wall") {
-                    initAvatarWall(); //global
+            var slideDuration = self.$activeSlide.attr('data-slide-duration');
+            if (slideDuration) {
+                slideDuration = parseInt(slideDuration, 10);
+            } else {
+                slideDuration = this.config.carouselInterval;
+            }
+            this._timeoutId = setTimeout(function () {
+                if (! self.isPaused()) {
+                    self.next();
                 }
+            }, slideDuration);
 
-                /* pause and resume the media wall*/
-                if ($activeSlide.attr("data-next-slide") == "media-wall") {
-                    destroyAvatarWall(); //global
-                    self.mediaWallInstance.pause();
+            if (self._config.reloadCycle > 0) {
+                if ((self._config.reloadCycle * self.numSlides) == ++self.slideCounter) {
+                    self._firstRun = false;
+                    self.slideCounter = 0;
+                    location.reload();
                 }
+            }
+        });
+    };
 
-                if ($activeSlide.find("#wall").length > 0) {
-                    self.mediaWallInstance.resume();
-                }
+    Slideshow.prototype._initView = function (opts) {
+        opts = opts || {};
 
-                if ($activeSlide.attr("data-next-slide") == "nike-map") {
-                    setTimeout(function () { initMap(); }, 500); //global
-                }
+        var slideIndex = this._slideEls.index($(opts.el).parents('.item')[0]);
+        if (this._collections[slideIndex]) {
+            return;
+        }
 
-            });
+        var collection = this._collections[slideIndex] = opts.collection || new Collection(opts.config);
 
-            $carousel.on("slid.bs.carousel", function () {
-                $activeSlide = $carousel.find(".active");
+        opts.config.el = opts.el;
+        var view = new opts.view(opts.config);
+        collection.pipe(view);
 
-                var slideDuration = $activeSlide.attr('data-slide-duration');
-                if (slideDuration) {
-                    slideDuration = parseInt(slideDuration, 10);
-                } else {
-                    slideDuration = this.config.carouselInterval;
-                }
-                setTimeout(function () {
-                    if (! $carousel.data()['bs.carousel'].paused) {
-                        $carousel.carousel('next');
-                    }
-                }, slideDuration);
+        return view;
+    };
 
-                if (self.config.reloadCycle > 0) {
-                    if ((self.config.reloadCycle * self.totNumSlides) == ++self.slideCounter) {
-                        self.firstRun = false;
-                        self.slideCounter = 0;
-                        location.reload();
-                    }
-                }
-            });
+    Slideshow.prototype.initMediaWall = function () {
+        return this._initView({
+            config: this._config.mediaWall,
+            collection: new Collection(this._config.mediaWall),
+            el: $('#wall')[0],
+            view: WallView
+        });
+    };
 
-            $carousel.carousel({
-                interval: false,
-                pause: ""
-            });
-            $carousel.trigger('slid.bs.carousel');
-        },
+    Slideshow.prototype.initCounterWall = function () {
+        var view = this._initView({
+            config: this._config.counterWall,
+            collection: new Collection(this._config.counterWall),
+            el: $('#avatar-wall')[0],
+            view: AvatarWallView
+        });
 
-        /**
-         * Initializes the collection and pipes them into the appropriate
-         * views.
-         **/
-        initCollections: function() {
-            var wallView = new WallView({
-                columns: 4,
-                el: document.getElementById("wall"),
-            });
+        if (! this._flipCounter) {
+            setTimeout(function () {
+                this._flipCounter = new FlipCounter(this._config.ncomments);
+            }.bind(this), 1000);
+        }
 
-            var collection1 = new Collection(this.config.mediaWall);
-            this.mediaWallInstance = collection1;
-            collection1.pipe(wallView);
+        return view;
+    };
 
-            var listView1 = new ListView({
-                el: document.getElementById("feed1")
-            });
+    Slideshow.prototype.initFeed1 = function () {
+        var $el = $('#feed1');
+        var view = this._initView({
+            config: this._config.listFeed1,
+            collection: new Collection(this._config.listFeed1),
+            el: $el[0],
+            view: ListView
+        });
 
-            var collection2 = new Collection(this.config.listFeed1);
-            this.feedInstance1 = collection2;
-            collection2.pipe(listView1);
+        return view;
+    };
 
-            var listView2 = new ListView({
-                el: document.getElementById("feed2")
-            });
+    Slideshow.prototype.initFeed2 = function () {
+        var $el = $('#feed2');
+        var view = this._initView({
+            config: this._config.listFeed1,
+            collection: new Collection(this._config.listFeed2),
+            el: $el[0],
+            view: ListView
+        });
 
-            var collection3 = new Collection(this.config.listFeed2);
-            this.feedInstance2 = collection3;
-            collection3.pipe(listView2);
-        },
+        return view;
+    };
 
-        /**
-         * Does the fading in and out of the list feed
-         **/
-        initFeedScroller: function (targetElId) {
-            var $cur;
-            var fn = function () {
-                $cur = $(targetElId + " .hub-content-container");
+    Slideshow.prototype._rotateFeed = function (feedIndex) {
+        var fn = function () {
+            var $el = $('#feed'+feedIndex);
+            var $contentEls = $el.find('.hub-content-container');
 
-                // If there's just 1 piece of content, just show it
-                if ($cur.length == 1) {
-                    $cur.eq(0).find("article").show();
-                    return;
-                }
-
-                $cur.eq(0).find("article").fadeOut("slow", function () {
-                    $cur.eq(1).find("article").fadeIn("slow", function() {
-                         $cur.eq(0).appendTo($(targetElId + " .hub-list"));
+            // If there's just 1 piece of content, show it
+            if ($contentEls == 1) {
+                $contentEls.eq(0).find('article').show();
+            } else {
+                $contentEls.eq(0).find("article").fadeOut("slow", function () {
+                    $contentEls.eq(1).find("article").fadeIn("slow", function() {
+                         $contentEls.eq(0).appendTo($el.find(".hub-list"));
                     });
                 });
-            };
-            setInterval(fn, this.config.feedScrollerInterval);
-        },
+            }
+        };
 
-        /**
-         * Initializes and kicks off the counters
-         **/
-        initFlipCounter: function () {
-            var fc = new FlipCounter(this.config.ncomments);
+        fn();
+        this._feedIntervalIds[feedIndex] = setInterval(fn, this._config.feedScrollerInterval);
+    };
+
+    Slideshow.prototype.initMap = function () {
+        this._initView({
+            config: this._config.map,
+            collection: new PollingHotCollections(this._config.map.hotCollectionsMeta),
+            el: $('#nike-map')[0],
+            view: NikeCollectionMapView
+        });
+    };
+
+    Slideshow.prototype.initGraph = function () {
+    };
+
+    Slideshow.prototype._parseQueryArgs = function () {
+        // Parse out query params
+        var url = location.search;
+        var params = url.split("&");
+
+        for (var i = 0, len = params.length; i < len; i++) {
+            var kv = params[i].split("=");
+            kv[0] = kv[0].replace("?", "");
+            kv[1] = parseInt(kv[1]);
+
+            // Carousel Interval
+            if (kv[0] == "ci") {
+                this._config.set("carouselInterval", kv[1]);
+            }
+
+            // Feed Interval
+            if (kv[0] == "fi") {
+                this._config.set("feedScrollerInterval", kv[1]);
+            }
+
+            // Reload Carousel
+            if (kv[0] == "rc") {
+                this._config.set("reloadCycle", kv[1]);
+            }
         }
     };
     
-    $(window).on('load', function () { Hub.init(); });
+    $(window).on('load', function () {
+        window.slideshow = new Slideshow({ el: $('.carousel') });
+    });
 
     // setInterval(function () {
     //     $('body').trigger('increment.counter');
