@@ -44,23 +44,12 @@ AvatarWallView.prototype._insert = function (contentView) {
     }
     contentView.$el.addClass(wallClass);
 
-    setTimeout(function () {
-        this._intervalIds.push(setInterval(function () {
-            contentView.$el.removeClass('nike-avatar-wall-fall');
-            setTimeout(function () {
-                contentView.$el.addClass('nike-avatar-wall-fall');
-            }, 500);
-        }, 5000));
-    }.bind(this), getRandomInt(500, 5000));
+    this.startLoop(contentView);
+
 };
 
-AvatarWallView.prototype.restartLoop = function () {
-    for (var i=0; i < this._intervalIds.length; i++) {
-        clearInterval(this._intervalIds[i]);
-    }
-
-    for (var i=0; i < this.views; i++) {
-        var contentView = this.views[i];
+AvatarWallView.prototype.startLoop = function(contentView) {
+    if (contentView) {
         setTimeout(function () {
             this._intervalIds.push(setInterval(function () {
                 contentView.$el.removeClass('nike-avatar-wall-fall');
@@ -69,10 +58,36 @@ AvatarWallView.prototype.restartLoop = function () {
                 }, 500);
             }, 5000));
         }.bind(this), getRandomInt(500, 5000));
+    } else {
+        for (var i=0; i < this.views.length; i++) {
+            (function (i) {
+                setTimeout(function () {
+                    contentView = this.views[i];
+                    this._intervalIds.push(setInterval(function () {
+                        contentView.$el.removeClass('nike-avatar-wall-fall');
+                        setTimeout(function () {
+                            contentView.$el.addClass('nike-avatar-wall-fall');
+                        }, 500);
+                    }, 5000));
+                }.bind(this), getRandomInt(500, 5000));
+            }.bind(this))(i);
+        }
     }
 };
 
+AvatarWallView.prototype.clearLoop = function () {
+    for (var i=0; i < this._intervalIds.length; i++) {
+        clearInterval(this._intervalIds[i]);
+    }
+    this._intervalIds = [];
+};
+
+AvatarWallView.prototype.restartLoop = function () {
+    this.clearLoop();
+    this.startLoop();
+};
+
 function getRandomInt(min, max) {
-  return Math.floor(Math.random() * (max - min + 1) + min);
+    return Math.floor(Math.random() * (max - min + 1) + min);
 }
 

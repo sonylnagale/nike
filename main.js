@@ -127,7 +127,7 @@ function (Collection, ListView, WallView) {
             self.$activeSlide = self._slideEls.eq(self._index);
 
             if (self.$activeSlide.hasClass('nike-media-wall')) {
-                clearInterval(self._apps[self._prevIndex]._intervalId);
+                //self._apps[self._prevIndex].clearLoop();
             }
             if (self.$activeSlide.hasClass('nike-feed-2')) {
                 clearInterval(self._feedIntervalIds[1]);
@@ -146,8 +146,7 @@ function (Collection, ListView, WallView) {
             // Hide and display small counter
             if (self.$activeSlide.attr("data-next-slide") == "counter") {
                 $(".sm-counter-wrapper").hide();
-            }
-            else if (!(self.$activeSlide.attr("data-hide-counter") && self._firstRun)) {
+            } else if (!(self.$activeSlide.attr("data-hide-counter") && self._firstRun)) {
                 $(".sm-counter-wrapper").show();
             }
 
@@ -157,21 +156,21 @@ function (Collection, ListView, WallView) {
         this.$carousel.on(this.endSlideTransitionEvent, function () {
             self.$activeSlide = self.$carousel.find(".active");
 
-            // Preload the next slide,
-            // with 2s delay to avoid janking slide animation.
-            var nextIndex = self._index+1;
-            setTimeout(function () {
-                self._activateCollection(nextIndex);
-            }, 2000);
-
             // Operations on next slide
+            var nextIndex = self._index+1;
             var $nextSlide = self._slideEls.eq(nextIndex);
             if ($nextSlide.hasClass('nike-counter-wall')) {
                 var view = self._apps[nextIndex];
                 if (view) {
-                    view.restartLoop();
+                    //view.restartLoop();
                 }
             }
+
+            // Preload the next slide,
+            // with 2s delay to avoid janking slide animation.
+            setTimeout(function () {
+                self._activateCollection(nextIndex);
+            }, 2000);
 
             // Operations on active slide
             if (self.$activeSlide.hasClass('nike-feed-1')) {
@@ -187,11 +186,12 @@ function (Collection, ListView, WallView) {
                 }
             }
             if (self.$activeSlide.hasClass('nike-map')) {
+                $(window).trigger('resize');
                 if (self._apps[self._index]) {
-                    return;
-                 }
-                 var view = self.initMap();
-                 self._apps[self._index] = view;
+                   return;
+                }
+                var view = self.initMap();
+                self._apps[self._index] = view;
             }
 
             var slideDuration = self.$activeSlide.attr('data-slide-duration');

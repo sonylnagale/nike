@@ -31,7 +31,7 @@ var SLIDE_CONFIG = {
         articleId: 'custom-1385074953161',
         columns: 4,
         initial: 20,
-        showMore: 4
+        showMore: 0
     },
     counterWall: {
         "network": "labs-t402.fyre.co",
@@ -44,7 +44,7 @@ var SLIDE_CONFIG = {
         siteId: '340628',
         articleId: 'custom-1392076496202',
         initial: 10,
-        showMore: 1
+        showMore: 0
     },
     listFeed2: {
         "network": "labs-t402.fyre.co",
@@ -52,7 +52,7 @@ var SLIDE_CONFIG = {
         "articleId": "xbox-0",
         "environment": "t402.livefyre.com",
         initial: 10,
-        showMore: 1
+        showMore: 0
     },
     map: {
         collectionToLocation: {
