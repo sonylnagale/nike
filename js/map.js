@@ -1,8 +1,10 @@
 var NIKE_MAP_INIT = false;
-function initMap() {
+function initMap(opts) {
     if (NIKE_MAP_INIT) {
         return;
     }
+    opts = opts || {};
+
     var MockHotCollectionsStream = Livefyre.require('streamhub-hot-collections-tests/mocks/streams/mock-hot-collections');
 
     var mexicoCity = { lat: 19.432607699202634, lon: -99.13320800056681 };
@@ -33,7 +35,7 @@ function initMap() {
 
     var mapView = window.mapView = new NikeCollectionMapView({
         el: document.getElementById('nike-map')
-        ,collectionToLocation: collectionToLocation
+        ,collectionToLocation: opts.collectionToLocation || collectionToLocation
         ,leafletMapOptions: {
             center: [31.045837782944986, -95.78360229847021],
             zoom: 5,
@@ -47,10 +49,11 @@ function initMap() {
         }
     });
 
-    var hotCollectionsStream = new PollingHotCollections({
+    var hotCollectionsMeta = opts.hotCollectionsMeta || {
         network: 'strategy-prod.fyre.co',
         siteId: '340628'
-    });
+    };
+    var hotCollectionsStream = new PollingHotCollections(hotCollectionsMeta);
 
     hotCollectionsStream.pipe(mapView);
 

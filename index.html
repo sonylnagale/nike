@@ -65,7 +65,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="item nike-kd-bg" data-next-slide="media-wall" data-slide-duration="18000">
+                <div class="nike-counter-wall item" data-hide-counter="first-run" data-next-slide="media-wall" data-slide-duration="18000">
                     <div id="avatar-wall" class="slate"></div>
                     <link rel="stylesheet" href="css/avatar-wall.css" />
                     <div class="slate">
@@ -80,35 +80,35 @@
                         </div>
                     </div>
                 </div>
-                <div class="item nike-kd-bg" data-slide-duration="14000">
+                <div class="nike-media-wall item nike-kd-bg" data-slide-duration="14000">
                     <div class="wall-container">
                         <div id="wall"></div>
                     </div>
                 </div>
-                <div class="item nike-kd-bg" data-slide-duration="30000">
+                <div class="nike-feed-1 item nike-kd-bg" data-slide-duration="30000">
                     <div class="feed-container">
                         <div id="feed1"></div>
                     </div>
                 </div>
-                <div class="item" data-slide-duration="10000">
+                <div class="nike-feed-2 item nike-kd-bg" data-slide-duration="10000">
                     <div class="feed-container">
                         <div id="feed2"></div>
                     </div>
                 </div>
-                <div class="item" data-next-slide="nike-map" data-slide-duration="12000">
+                <div class="nike-graph item" data-next-slide="nike-map" data-slide-duration="12000">
                     <div class="slate" style="width: 1920px">
                         <div id="nike-graph"></div>
                         <link rel="stylesheet" href="css/graph.css" />
                     </div>
                 </div>
                 <div class="item nike-map" data-slide-duration="18000">
-                    <div class="slate" style="width: 1920px">
-                        <div id="nike-map"></div>
+                    <div class="slate" style="width: 1920px height: 1080px;">
+                        <div id="nike-map" style="position: relative; width: 100%; height: 100%;"></div>
                         <link rel="stylesheet" href="css/map.css" />
                     </div>
                 </div>
             </div>
-            <div class="counter-wrapper sm-counter-wrapper">
+            <div class="nike-counter counter-wrapper sm-counter-wrapper">
                 <div class="counter sm-counter-container">
                     <div class="sm-counter"></div>
                 </div>
@@ -121,13 +121,11 @@
             </ol>
             -->
         </div>
-        <script src="config.js"></script>
-        <script src="main.js"></script>
 
         <!-- avatar wall scripts -->
         <script type="text/javascript" src="js/avatar-content-view.js"></script>
         <script type="text/javascript" src="js/avatar-wall-view.js"></script>
-        <script type="text/javascript" src="js/counter-wall.js"></script>
+        <!--<script type="text/javascript" src="js/counter-wall.js"></script>-->
 
         <!-- graph scripts -->
         <script src="http://d3js.org/d3.v3.min.js"></script>
@@ -138,6 +136,9 @@
         <script type="text/javascript" src="js/countries.js"></script>
         <script type="text/javascript" src="js/nike-collection-map-view.js"></script>
         <script type="text/javascript" src="js/polling-hot-collections.js"></script>
-        <script type="text/javascript" src="js/map.js"></script>
+        <!--<script type="text/javascript" src="js/map.js"></script>-->
+
+        <script src="config.js"></script>
+        <script src="main.js"></script>
     </body>
 </html>

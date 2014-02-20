@@ -102,6 +102,9 @@ body {
 #wall {
     margin-top: 85px;
 }
+#wall .hub-wall-column {
+    width: 25%;
+}
 #wall .hub-list {
     text-align: center;
 }
@@ -211,6 +214,8 @@ body {
     display: none;
     margin: auto;
     width: 900px;
+    position: relative;
+    top: 0px;
 }
 #feed1 .content .content-header .content-header-inner,
 #feed2 .content .content-header .content-header-inner {
