@@ -97,9 +97,9 @@ function (Collection, ListView, WallView) {
             view = this.initFeed1();
         } else if (slideEl.hasClass('nike-feed-2')) {
             view = this.initFeed2();
-        } else if (slideEl.hasClass('nike-map')) {
-            //view = this.initMap();
         }
+        // Note: initMap invoked in endSlideTransitionEvent callback, as 
+        // Leaflet expects a visible parent div to render within.
 
         if (! view) {
             this._apps[slideIndex] = null;
@@ -301,7 +301,7 @@ function (Collection, ListView, WallView) {
         };
 
         fn();
-        //this._feedIntervalIds[feedIndex] = setInterval(fn, this._config.feedScrollerInterval);
+        this._feedIntervalIds[feedIndex] = setInterval(fn, this._config.feedScrollerInterval);
     };
 
     Slideshow.prototype.initMap = function () {
