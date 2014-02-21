@@ -47,11 +47,6 @@ var graphBody = svg.append("g")
 	.attr("transform", "translate(0," + margin.top + ")")
 	.attr("width",width);
 
-var bird = svg.selectAll("image").data([0]);
-
-function epochToDate (epoch) {
-    return new Date(epoch * 1000);
-}
 
 function trimData (rawData) {
     var trimmedData = [];
@@ -150,14 +145,7 @@ function draw(newdata, count) {
 		
 		path = graphBody.selectAll("path").node();
 
-		
-		bird.enter()
-		    .append("image")
-		    .attr("xlink:href", "imgs/graph_twitter_bird_boxed.png")
-		    .attr("x", "1730")
-		    .attr("y", "500")
-		    .attr("width", "44")
-		    .attr("height", "46");
+	
 	} // /if first run  
 	
 	// update with animation
@@ -187,21 +175,6 @@ function draw(newdata, count) {
 			.duration(10000) // for this demo we want a continual slide so set this to the same as the setInterval amount below
 			.attr("transform", "translate(" + x(0) + ")"); // animate a slide to the left back to x(0) pixels to reveal the new value
 
-
-	var birdY1 = path.getPointAtLength(0).y - margin.top - margin.bottom;
-	var birdY2 = path.getPointAtLength(x(1)).y - margin.top - margin.bottom;
-	
-	console.log(path.getPointAtLength(112));
-	console.log(birdY1, birdY2);
-	
-	bird.transition()
-	    	.ease("monotone")
-	    	.duration(5000)
-	    	.attr("transform", "translate(0," + birdY1 +")") // animate a slide to the left back to x(0) pixels to reveal the new value
-		.transition()
-			.ease("monotone")
-			.duration(5000)
-			.attr("transform","translate(0," + birdY2 + ")");
 	dataSet.splice(0,2);
 };
 
