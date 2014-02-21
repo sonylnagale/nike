@@ -5,7 +5,8 @@ var dataSet = [];
 
 var WIDTH = 1920,
 	HEIGHT = 1080,
-	line;
+	line,
+	path;
 
 var margin = {top: 170, right: 80, bottom: 168, left: 50},
     width = WIDTH - margin.left - margin.right,
@@ -22,9 +23,9 @@ var clip = svg.append("defs").append("svg:clipPath")
 	.attr("id", "clip")
 	.append("svg:rect")
 		.attr("id", "clip-rect")
-		.attr("x", "-50px")
+		.attr("x", "0")
 		.attr("y", "25px")
-		.attr("width", width - padding)
+		.attr("width", width)
 		.attr("height", height - padding);
 
 
@@ -38,7 +39,7 @@ var graphclip = svg.append("defs").append("svg:clipPath")
 		.attr("id", "clip-rect")
 		.attr("x", "0")
 		.attr("y", "0")
-		.attr("width", width-300)
+		.attr("width", width - 20)
 		.attr("height", height);
 
 var graphBody = svg.append("g")
@@ -97,13 +98,13 @@ function draw(newdata, count) {
 	}
 	
 	var xOrdinal = d3.scale.ordinal()
-		 .domain(["-260s","-250s","-240s","-230s","-220s","-210s","-200s","-190s","-180s","-170s","-160s","-150s","-140s","-130s","-120s","-110s","-100s","-90s","-80s","-70s","-60s","-50s","-40s","-30s","","   "])
+		 .domain(["-260s","-250s","-240s","-230s","-220s","-210s","-200s","-190s","-180s","-170s","-160s","-150s","-140s","-130s","-120s","-110s","-100s","-90s","-80s","-70s","-60s","-50s","-40s","-30s"])
 		 .rangePoints([0, width]);
 	 
 	 
 	var x = d3.time.scale()
 		.domain([0,dataSet.length])
-		.range([0,width]);
+		.range([-100,width + 230]);
 	 	 
  	var y = d3.scale.linear()
 		.range([height, 0])
@@ -128,7 +129,7 @@ function draw(newdata, count) {
 		svg.append("g")
 		  	.attr("class", "x axis")
 		  	.attr("id", "xAxis")
-         	.attr("transform", "translate(-120, " + xAxisPosition + ")")
+         	.attr("transform", "translate(-100, " + xAxisPosition + ")")
 		  	.call(xAxis);
 		
 	 	var xticks = d3.select("#xAxis").selectAll(".tick");
@@ -147,10 +148,13 @@ function draw(newdata, count) {
 	      	.attr("id", "graphLine")
 	      	.style("stroke", "#fd5502");
 		
+		path = graphBody.selectAll("path").node();
+
+		
 		bird.enter()
 		    .append("image")
 		    .attr("xlink:href", "imgs/graph_twitter_bird_boxed.png")
-		    .attr("x", "1480")
+		    .attr("x", "1730")
 		    .attr("y", "500")
 		    .attr("width", "44")
 		    .attr("height", "46");
@@ -164,46 +168,41 @@ function draw(newdata, count) {
 		.y(function(d) { 
 			return y(d[0]); 
 		})
-		.interpolate('linear');
+		.interpolate('monotone');
 
  
 	svg.select(".y.axis").transition()
 		.duration(axisDuration)
-		.ease("linear")
+		.ease("monotone")
 		.call(yAxis);
 		
 	graphBody.selectAll("path")
 		.data([dataSet]) // set the new data
-		.attr("transform", "translate(" + x(0) + ")") // set the transform to the right by x(1) pixels (6 for the scale we've set) to hide the new value
+		.attr("transform", "translate(" + x(2) + ")") // set the transform to the right by x(1) pixels (6 for the scale we've set) to hide the new value
 		.attr("d", line) // apply the new data values ... but the new value is hidden at this point off the right of the canvas
 		
 		.interrupt()
 		.transition() // start a transition to bring the new value into view
 			.ease("linear")
 			.duration(10000) // for this demo we want a continual slide so set this to the same as the setInterval amount below
-			.attr("transform", "translate(" + x(-2) + ")"); // animate a slide to the left back to x(0) pixels to reveal the new value
+			.attr("transform", "translate(" + x(0) + ")"); // animate a slide to the left back to x(0) pixels to reveal the new value
 
-	var path = graphBody.selectAll("path").node();
 
-	console.log(path.getPointAtLength(x(0)).y);
+	var birdY1 = path.getPointAtLength(0).y - margin.top - margin.bottom;
+	var birdY2 = path.getPointAtLength(x(1)).y - margin.top - margin.bottom;
 	
-	var birdY = path.getPointAtLength(x(0)).y - margin.top;
+	console.log(path.getPointAtLength(112));
+	console.log(birdY1, birdY2);
 	
 	bird.transition()
-	    	.ease("linear")
-	    	.duration(1000)
-	    	.attr("transform", "translate(0," + birdY +")"); // animate a slide to the left back to x(0) pixels to reveal the new value
-	
+	    	.ease("monotone")
+	    	.duration(5000)
+	    	.attr("transform", "translate(0," + birdY1 +")") // animate a slide to the left back to x(0) pixels to reveal the new value
+		.transition()
+			.ease("monotone")
+			.duration(5000)
+			.attr("transform","translate(0," + birdY2 + ")");
 	dataSet.splice(0,2);
-
-//	console.log(path.getPointAtLength(x(0)).y);
-	
-//	$("#twitterBird").animate({
-//		top: path.getPointAtLength(x(0)).y + margin.top,
-//		easing: "linear"
-//	}, 5000, function() {
-//		// complete handler
-//	});
 };
 
 d3.json(initialDataURL, drawSetup);
